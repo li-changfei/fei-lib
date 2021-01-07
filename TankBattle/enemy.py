@@ -136,12 +136,12 @@ class Enemy(Sprite):
             return True
         # 随机改变行走方向
         rand_int = random.randint(0, 1000)
-        if rand_int > 999:
+        if rand_int > 900:
             self.ai_settings.enemy_transform += 1
-            # if self.ai_settings.enemy_transform > 10:
+            if self.ai_settings.enemy_transform > 10:
             # 转向太过频繁，再次均衡
-            self.ai_settings.enemy_transform = 0
-            return True
+                self.ai_settings.enemy_transform = 0
+                return True
         collisions = pygame.sprite.spritecollide(self, tank_map.get_map(MapType.brick.name), False)
         if len(collisions) > 0:
             self.back_for_collide()

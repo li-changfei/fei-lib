@@ -19,7 +19,8 @@ def check_events(ai_settings, screen, tank, bullets, stats):
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, tank)
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            stats.game_step = GameStep.ready
+            if stats.game_step == GameStep.init:
+                stats.game_step = GameStep.ready
 
 
 def update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets):
@@ -58,16 +59,16 @@ def check_keydown_events(event, ai_settings, screen, tank, bullets):
     if event.key == pygame.K_RIGHT:
         # 坦克右移
         tank.moving_right = True
-        tank.transform(Direction.right)
+        tank.direction_priority.append(Direction.right)
     elif event.key == pygame.K_LEFT:
         tank.moving_left = True
-        tank.transform(Direction.left)
+        tank.direction_priority.append(Direction.left)
     elif event.key == pygame.K_UP:
         tank.moving_up = True
-        tank.transform(Direction.up)
+        tank.direction_priority.append(Direction.up)
     elif event.key == pygame.K_DOWN:
         tank.moving_down = True
-        tank.transform(Direction.down)
+        tank.direction_priority.append(Direction.down)
     elif event.key == pygame.K_SPACE:
         fire_bullet(ai_settings, screen, tank, bullets)
 
@@ -75,12 +76,16 @@ def check_keydown_events(event, ai_settings, screen, tank, bullets):
 def check_keyup_events(event, tank):
     if event.key == pygame.K_RIGHT:
         tank.moving_right = False
+        tank.direction_priority.remove(Direction.right)
     elif event.key == pygame.K_LEFT:
         tank.moving_left = False
+        tank.direction_priority.remove(Direction.left)
     if event.key == pygame.K_UP:
         tank.moving_up = False
+        tank.direction_priority.remove(Direction.up)
     elif event.key == pygame.K_DOWN:
         tank.moving_down = False
+        tank.direction_priority.remove(Direction.down)
 
 
 def update_bullets(enemies, tank, bullets, enemy_bullets, screen, stats):
@@ -128,6 +133,10 @@ def update_bullets(enemies, tank, bullets, enemy_bullets, screen, stats):
     # 碰撞检测，如果有碰撞，删掉碰撞的精灵
     # 子弹碰到后抵消
     collisions = pygame.sprite.groupcollide(bullets, enemy_bullets, True, True)
+    for collide_bullet, collide_enemy_bullets in collisions.items():
+        collide_bullet.owner.bullet_count -= 1
+        for enemy_bullet in collide_enemy_bullets:
+            enemy_bullet.owner.bullet_count -= 1
     # 子弹攻击到敌人后，一起消失
     collisions = pygame.sprite.groupcollide(bullets, enemies, True, True)
     for bullet in collisions.keys():

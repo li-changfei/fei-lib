@@ -53,10 +53,10 @@ def run_game():
 
         if stats.game_active:
             if stats.game_step == GameStep.init:
-                button_image = pygame.image.load('images/start_button.jpg')
+                button_image = pygame.image.load('images/start_image.jpg')
                 button_rect = button_image.get_rect()
-                button_rect.centerx = screen.get_rect().centerx
-                button_rect.centery = screen.get_rect().centery
+                button_rect.x = 0
+                button_rect.y = 0
                 screen.blit(button_image, button_rect)
                 pygame.display.flip()
             elif stats.game_step == GameStep.ready:
@@ -69,6 +69,7 @@ def run_game():
                 screen.blit(text_surface, text_rect)
                 pygame.display.flip()
                 if wait_count == 100:
+                    wait_count = 0
                     stats.game_step = GameStep.start
             elif stats.game_step == GameStep.start:
                 tank.update()

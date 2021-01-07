@@ -29,7 +29,8 @@ class Tank:
         # 坦克唯一标识
         self.bullet_count = 0
         self.hasCollide = False
-
+        # 坦克移动方向优先度
+        self.direction_priority = []
     def blit_me(self):
         """在指定位置绘制飞船"""
         self.screen.blit(self.moving_image, self.rect)
@@ -57,13 +58,18 @@ class Tank:
                 self.moving_up = False
             if self.moving_down:
                 self.moving_down = False
-        if self.moving_right:
+        direction_priority = self.direction_priority[0] if len(self.direction_priority) else ""
+        if self.moving_right and direction_priority == Direction.right:
+            self.transform(Direction.right)
             self.x += self.ai_settings.tank_speed_factor
-        if self.moving_left:
+        if self.moving_left and direction_priority == Direction.left:
+            self.transform(Direction.left)
             self.x -= self.ai_settings.tank_speed_factor
-        if self.moving_up:
+        if self.moving_up and direction_priority == Direction.up:
+            self.transform(Direction.up)
             self.y -= self.ai_settings.tank_speed_factor
-        if self.moving_down:
+        if self.moving_down and direction_priority == Direction.down:
+            self.transform(Direction.down)
             self.y += self.ai_settings.tank_speed_factor
 
         # 根据self.x更新rect对象
@@ -98,30 +104,59 @@ class Tank:
         if self.moving_down and self.rect.bottom >= self.screen_rect.bottom:
             return True
 
-        if self.hasCollide:
-            self.hasCollide = False
-        else:
-            collisions = pygame.sprite.spritecollide(self, tank_map.get_map(MapType.brick.name), False)
-            if len(collisions) > 0:
-                self.back_for_collide()
-                return True
-            collisions = pygame.sprite.spritecollide(self, tank_map.get_map(MapType.steel.name), False)
-            if len(collisions) > 0:
-                self.back_for_collide()
-                return True
-            collisions = pygame.sprite.spritecollide(self, tank_map.get_map(MapType.seawater.name), False)
-            if len(collisions) > 0:
-                self.back_for_collide()
-                return True
+        # if self.hasCollide:
+        #    self.hasCollide = False
+        # else:
+        collisions = pygame.sprite.spritecollide(self, tank_map.get_map(MapType.brick.name), False)
+        if len(collisions) > 0:
+            return self.back_for_collide(collisions)
+        collisions = pygame.sprite.spritecollide(self, tank_map.get_map(MapType.steel.name), False)
+        if len(collisions) > 0:
+            self.back_for_collide(collisions)
+            return True
+        collisions = pygame.sprite.spritecollide(self, tank_map.get_map(MapType.seawater.name), False)
+        if len(collisions) > 0:
+            self.back_for_collide(collisions)
+            return True
         return False
 
-    def back_for_collide(self):
-        self.hasCollide = True
-        if self.moving_right:
+    def back_for_collide(self, collisions):
+        # self.hasCollide = True
+        direction_priority = self.direction_priority[0] if len(self.direction_priority) else ""
+        if self.moving_right and direction_priority == Direction.right:
             self.x -= self.ai_settings.tank_speed_factor
-        if self.moving_left:
+            if len(collisions) == 1:
+                if self.rect.bottom - collisions[0].rect.top < 5:
+                    self.y = collisions[0].rect.top - self.rect.height - 1
+                    return False
+                if collisions[0].rect.bottom - self.rect.top < 5:
+                    self.y = collisions[0].rect.bottom + 1
+                    return False
+        if self.moving_left and direction_priority == Direction.left:
             self.x += self.ai_settings.tank_speed_factor
-        if self.moving_up:
+            if len(collisions) == 1:
+                if self.rect.bottom - collisions[0].rect.top < 5:
+                    self.y = collisions[0].rect.top - self.rect.height - 1
+                    return False
+                if collisions[0].rect.bottom - self.rect.top < 5:
+                    self.y = collisions[0].rect.bottom + 1
+                    return False
+        if self.moving_up and direction_priority == Direction.up:
             self.y += self.ai_settings.tank_speed_factor
-        if self.moving_down:
+            if len(collisions) == 1:
+                if self.rect.right - collisions[0].rect.left < 5:
+                    self.x = collisions[0].rect.left - self.rect.width - 1
+                    return False
+                if collisions[0].rect.right - self.rect.left < 5:
+                    self.x= collisions[0].rect.right + 1
+                    return False
+        if self.moving_down and direction_priority == Direction.down:
             self.y -= self.ai_settings.tank_speed_factor
+            if len(collisions) == 1:
+                if self.rect.right - collisions[0].rect.left < 5:
+                    self.x = collisions[0].rect.left - self.rect.width - 1
+                    return False
+                if collisions[0].rect.right - self.rect.left < 5:
+                    self.x= collisions[0].rect.right + 1
+                    return False
+        return True
