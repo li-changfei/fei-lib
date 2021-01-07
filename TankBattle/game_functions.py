@@ -1,6 +1,5 @@
 import sys
 import pygame
-from scipy import stats
 
 import tank_map
 from enumClass import Direction, MapType, GameStep
@@ -10,7 +9,7 @@ from wall import WallBrick, WallSteel, WallSeawater, WallGrassland, WallHome
 from pygame.sprite import Group
 
 
-def check_events(ai_settings, screen, tank, bullets):
+def check_events(ai_settings, screen, tank, bullets, stats):
     """相应键盘和鼠标事件"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -153,6 +152,16 @@ def update_bullets(enemies, tank, bullets, enemy_bullets, screen, stats):
     # 被敌人子弹攻击后触发
     collisions = pygame.sprite.spritecollide(tank, enemy_bullets, True)
     if len(collisions) > 0:
+        stats.game_active = False
+    # 老家被打到
+    home = tank_map.get_map(MapType.home.name)
+    collisions = pygame.sprite.spritecollide(home, enemy_bullets, True)
+    if len(collisions) > 0:
+        WallHome.break_home(home)
+        stats.game_active = False
+    collisions = pygame.sprite.spritecollide(home, bullets, True)
+    if len(collisions) > 0:
+        WallHome.break_home(home)
         stats.game_active = False
 
 

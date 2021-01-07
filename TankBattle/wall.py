@@ -73,6 +73,9 @@ class WallHome(Sprite):
         self.rect.x = 0
         self.rect.y = 0
 
+    def break_home(self):
+        self.image = pygame.image.load('images/break_home.jpg')
+
     def blit_me(self):
         """在指定位置绘制飞船"""
         self.screen.blit(self.image, self.rect)

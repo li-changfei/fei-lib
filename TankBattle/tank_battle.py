@@ -47,9 +47,9 @@ def run_game():
     wait_count = 0
     # 开启游戏主循环
     while True:
-        clock.tick(600)
+        clock.tick(100)
         # 监视键盘鼠标
-        gf.check_events(ai_settings, screen, tank, bullets)
+        gf.check_events(ai_settings, screen, tank, bullets, stats)
 
         if stats.game_active:
             if stats.game_step == GameStep.init:
@@ -61,7 +61,7 @@ def run_game():
                 pygame.display.flip()
             elif stats.game_step == GameStep.ready:
                 wait_count += 1
-                text_surface = font.render(u'level' + stats.level, False, ai_settings.failed_color)
+                text_surface = font.render(u'level {0}'.format(stats.level), False, ai_settings.failed_color)
                 text_rect = text_surface.get_rect()
                 text_rect.centerx = screen.get_rect().centerx
                 text_rect.centery = screen.get_rect().centery
@@ -83,7 +83,6 @@ def run_game():
             text_rect.centerx = screen.get_rect().centerx
             text_rect.centery = screen.get_rect().centery
 
-            screen.fill(ai_settings.bg_color)
             screen.blit(text_surface, text_rect)
             pygame.display.flip()
 
