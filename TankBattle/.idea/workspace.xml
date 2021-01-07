@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c1ba2611-e767-4978-8ff1-1a40cd24c280" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1maN9BIh9sLxohBAbCwbXatc5vj" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+  </component>
+  <component name="RunManager">
+    <configuration name="tank_battle" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="TankBattle" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tank_battle.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.tank_battle" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c1ba2611-e767-4978-8ff1-1a40cd24c280" name="Default Changelist" comment="" />
+      <created>1609727587190</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1609727587190</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="537" height="449" key="DebuggerActiveHint" timestamp="1609907872790">
+      <screen x="0" y="0" width="1636" height="898" />
+    </state>
+    <state width="537" height="449" key="DebuggerActiveHint/0.0.1636.898@0.0.1636.898" timestamp="1609907872790" />
+    <state width="1615" height="235" key="GridCell.Tab.0.bottom" timestamp="1609928504199">
+      <screen x="0" y="0" width="1636" height="898" />
+    </state>
+    <state width="1615" height="235" key="GridCell.Tab.0.bottom/0.0.1636.898@0.0.1636.898" timestamp="1609928504199" />
+    <state width="1697" height="235" key="GridCell.Tab.0.bottom/0.0.1718.898@0.0.1718.898" timestamp="1609729994473" />
+    <state width="1615" height="235" key="GridCell.Tab.0.center" timestamp="1609928504199">
+      <screen x="0" y="0" width="1636" height="898" />
+    </state>
+    <state width="1615" height="235" key="GridCell.Tab.0.center/0.0.1636.898@0.0.1636.898" timestamp="1609928504199" />
+    <state width="1697" height="235" key="GridCell.Tab.0.center/0.0.1718.898@0.0.1718.898" timestamp="1609729994473" />
+    <state width="1615" height="235" key="GridCell.Tab.0.left" timestamp="1609928504199">
+      <screen x="0" y="0" width="1636" height="898" />
+    </state>
+    <state width="1615" height="235" key="GridCell.Tab.0.left/0.0.1636.898@0.0.1636.898" timestamp="1609928504199" />
+    <state width="1697" height="235" key="GridCell.Tab.0.left/0.0.1718.898@0.0.1718.898" timestamp="1609729994473" />
+    <state width="1615" height="235" key="GridCell.Tab.0.right" timestamp="1609928504199">
+      <screen x="0" y="0" width="1636" height="898" />
+    </state>
+    <state width="1615" height="235" key="GridCell.Tab.0.right/0.0.1636.898@0.0.1636.898" timestamp="1609928504199" />
+    <state width="1697" height="235" key="GridCell.Tab.0.right/0.0.1718.898@0.0.1718.898" timestamp="1609729994473" />
+    <state width="1615" height="291" key="GridCell.Tab.1.bottom" timestamp="1609927493575">
+      <screen x="0" y="0" width="1636" height="898" />
+    </state>
+    <state width="1615" height="291" key="GridCell.Tab.1.bottom/0.0.1636.898@0.0.1636.898" timestamp="1609927493575" />
+    <state width="1615" height="291" key="GridCell.Tab.1.center" timestamp="1609927493575">
+      <screen x="0" y="0" width="1636" height="898" />
+    </state>
+    <state width="1615" height="291" key="GridCell.Tab.1.center/0.0.1636.898@0.0.1636.898" timestamp="1609927493575" />
+    <state width="1615" height="291" key="GridCell.Tab.1.left" timestamp="1609927493575">
+      <screen x="0" y="0" width="1636" height="898" />
+    </state>
+    <state width="1615" height="291" key="GridCell.Tab.1.left/0.0.1636.898@0.0.1636.898" timestamp="1609927493575" />
+    <state width="1615" height="291" key="GridCell.Tab.1.right" timestamp="1609927493575">
+      <screen x="0" y="0" width="1636" height="898" />
+    </state>
+    <state width="1615" height="291" key="GridCell.Tab.1.right/0.0.1636.898@0.0.1636.898" timestamp="1609927493575" />
+    <state x="367" y="94" key="SettingsEditor" timestamp="1609728133699">
+      <screen x="0" y="0" width="1718" height="898" />
+    </state>
+    <state x="367" y="94" key="SettingsEditor/0.0.1718.898@0.0.1718.898" timestamp="1609728133699" />
+  </component>
+</project>
