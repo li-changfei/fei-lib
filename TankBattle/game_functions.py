@@ -15,12 +15,12 @@ def check_events(ai_settings, screen, tank, bullets, stats):
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            check_keydown_events(event, ai_settings, screen, tank, bullets)
+            check_keydown_events(event, ai_settings, screen, tank, bullets, stats)
         elif event.type == pygame.KEYUP:
-            check_keyup_events(event, tank)
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if stats.game_step == GameStep.init:
-                stats.game_step = GameStep.ready
+            check_keyup_events(event, tank, stats)
+        # elif event.type == pygame.MOUSEBUTTONDOWN:
+        #     if stats.game_step == GameStep.init:
+        #         stats.game_step = GameStep.ready
 
 
 def update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets):
@@ -55,37 +55,50 @@ def update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets):
     pygame.display.flip()
 
 
-def check_keydown_events(event, ai_settings, screen, tank, bullets):
-    if event.key == pygame.K_RIGHT:
-        # 坦克右移
-        tank.moving_right = True
-        tank.direction_priority.append(Direction.right)
-    elif event.key == pygame.K_LEFT:
-        tank.moving_left = True
-        tank.direction_priority.append(Direction.left)
-    elif event.key == pygame.K_UP:
-        tank.moving_up = True
-        tank.direction_priority.append(Direction.up)
-    elif event.key == pygame.K_DOWN:
-        tank.moving_down = True
-        tank.direction_priority.append(Direction.down)
-    elif event.key == pygame.K_SPACE:
-        fire_bullet(ai_settings, screen, tank, bullets)
+def check_keydown_events(event, ai_settings, screen, tank, bullets, stats):
+    if stats.game_step == GameStep.init:
+        if event.key == pygame.K_UP:
+            tank.y -= 35
+        elif event.key == pygame.K_DOWN:
+            tank.y += 35
+        elif event.key == pygame.K_SPACE:
+            tank.x = 180
+            tank.rect.bottom = screen.get_rect().bottom
+            tank.y = tank.rect.y
+            tank.moving_image = tank.image
+            stats.game_step = GameStep.ready
+    elif stats.game_step == GameStep.start:
+        if event.key == pygame.K_RIGHT:
+            # 坦克右移
+            tank.moving_right = True
+            tank.direction_priority.append(Direction.right)
+        elif event.key == pygame.K_LEFT:
+            tank.moving_left = True
+            tank.direction_priority.append(Direction.left)
+        elif event.key == pygame.K_UP:
+            tank.moving_up = True
+            tank.direction_priority.append(Direction.up)
+        elif event.key == pygame.K_DOWN:
+            tank.moving_down = True
+            tank.direction_priority.append(Direction.down)
+        elif event.key == pygame.K_SPACE:
+            fire_bullet(ai_settings, screen, tank, bullets)
 
 
-def check_keyup_events(event, tank):
-    if event.key == pygame.K_RIGHT:
-        tank.moving_right = False
-        tank.direction_priority.remove(Direction.right)
-    elif event.key == pygame.K_LEFT:
-        tank.moving_left = False
-        tank.direction_priority.remove(Direction.left)
-    if event.key == pygame.K_UP:
-        tank.moving_up = False
-        tank.direction_priority.remove(Direction.up)
-    elif event.key == pygame.K_DOWN:
-        tank.moving_down = False
-        tank.direction_priority.remove(Direction.down)
+def check_keyup_events(event, tank, stats):
+    if stats.game_step == GameStep.start:
+        if event.key == pygame.K_RIGHT:
+            tank.moving_right = False
+            tank.direction_priority.remove(Direction.right)
+        elif event.key == pygame.K_LEFT:
+            tank.moving_left = False
+            tank.direction_priority.remove(Direction.left)
+        if event.key == pygame.K_UP:
+            tank.moving_up = False
+            tank.direction_priority.remove(Direction.up)
+        elif event.key == pygame.K_DOWN:
+            tank.moving_down = False
+            tank.direction_priority.remove(Direction.down)
 
 
 def update_bullets(enemies, tank, bullets, enemy_bullets, screen, stats):
@@ -249,4 +262,16 @@ def create_map(ai_settings, screen):
     my_home.rect.bottom = screen.get_rect().bottom
     tank_map.set_map(MapType.home.name, my_home)
 
+
+def start_image_update(tank, screen):
+    button_image = pygame.image.load('images/start_image.jpg')
+    button_rect = button_image.get_rect()
+    button_rect.x = 0
+    button_rect.y = 0
+    screen.blit(button_image, button_rect)
+
+    tank.moving_image = pygame.transform.rotate(tank.image, 270)
+    tank.update()
+    tank.blit_me()
+    pygame.display.flip()
 

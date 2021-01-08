@@ -53,12 +53,7 @@ def run_game():
 
         if stats.game_active:
             if stats.game_step == GameStep.init:
-                button_image = pygame.image.load('images/start_image.jpg')
-                button_rect = button_image.get_rect()
-                button_rect.x = 0
-                button_rect.y = 0
-                screen.blit(button_image, button_rect)
-                pygame.display.flip()
+                gf.start_image_update(tank, screen)
             elif stats.game_step == GameStep.ready:
                 wait_count += 1
                 text_surface = font.render(u'level {0}'.format(stats.level), False, ai_settings.failed_color)

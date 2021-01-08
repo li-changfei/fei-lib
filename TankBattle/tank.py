@@ -15,10 +15,12 @@ class Tank:
         self.rect = self.moving_image.get_rect()
         self.screen_rect = screen.get_rect()
         # 将每艘新坦克放在屏幕底部中央
-        self.x = 180
-        self.rect.x = self.x
-        self.rect.bottom = self.screen_rect.bottom
-        self.y = self.rect.y
+        # self.x = 180
+        # self.y = self.rect.y
+        # self.rect.x = self.x
+        # self.rect.bottom = self.screen_rect.bottom
+        self.x = 120
+        self.y = 280
         # 移动标志
         self.moving_right = False
         self.moving_left = False
@@ -31,24 +33,13 @@ class Tank:
         self.hasCollide = False
         # 坦克移动方向优先度
         self.direction_priority = []
+
     def blit_me(self):
         """在指定位置绘制飞船"""
         self.screen.blit(self.moving_image, self.rect)
 
     def update(self):
         """持续运动"""
-        # if self.moving_right and self.rect.right < self.screen_rect.right:
-        #     if not self.must_stop():
-        #         self.x += self.ai_settings.tank_speed_factor
-        # if self.moving_left and self.rect.left > 0:
-        #     if not self.must_stop():
-        #         self.x -= self.ai_settings.tank_speed_factor
-        # if self.moving_up and self.rect.top > 0:
-        #     if not self.must_stop():
-        #         self.y -= self.ai_settings.tank_speed_factor
-        # if self.moving_down and self.rect.y < self.screen_rect.bottom:
-        #     if not self.must_stop():
-        #         self.y += self.ai_settings.tank_speed_factor
         if self.must_stop():
             if self.moving_right:
                 self.moving_right = False
