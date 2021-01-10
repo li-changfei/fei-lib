@@ -58,8 +58,12 @@ def update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets):
 def check_keydown_events(event, ai_settings, screen, tank, bullets, stats):
     if stats.game_step == GameStep.init:
         if event.key == pygame.K_UP:
+            if tank.y == 280:
+                tank.y = 385
             tank.y -= 35
         elif event.key == pygame.K_DOWN:
+            if tank.y == 350:
+                tank.y = 245
             tank.y += 35
         elif event.key == pygame.K_SPACE:
             tank.x = 180
@@ -107,6 +111,11 @@ def update_bullets(enemies, tank, bullets, enemy_bullets, screen, stats):
     bullets.update()
     enemy_bullets.update()
 
+    # 删除子弹
+    delete_bullets(enemies, tank, bullets, enemy_bullets, screen, stats)
+
+
+def delete_bullets(enemies, tank, bullets, enemy_bullets, screen, stats):
     # 删除已消失的子弹
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
