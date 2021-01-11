@@ -1,4 +1,6 @@
 import sys
+
+import numpy
 import pygame
 
 import tank_map
@@ -161,8 +163,12 @@ def delete_bullets(enemies, tank, bullets, enemy_bullets, screen, stats):
             enemy_bullet.owner.bullet_count -= 1
     # 子弹攻击到敌人后，一起消失
     collisions = pygame.sprite.groupcollide(bullets, enemies, True, True)
-    for bullet in collisions.keys():
+    # if len(collisions) > 0:
+    #     print(collisions)
+    for bullet, kill_enemies in collisions.items():
         bullet.owner.bullet_count -= 1
+        for enemy in kill_enemies:
+            enemies.remove(enemy)
 
     # 子弹打到砖墙时动作
     bricks = tank_map.get_map(MapType.brick.name)
@@ -205,19 +211,16 @@ def fire_bullet(ai_settings, screen, tank, bullets):
         tank.bullet_count += 1
 
 
-def create_fleet(ai_settings, screen, enemies):
-    enemy = Enemy(ai_settings, screen)
-    enemy.x = 0
-    enemy.rect.x = enemy.x
-    enemies.add(enemy)
-    enemy = Enemy(ai_settings, screen)
-    enemy.x = 240
-    enemy.rect.x = enemy.x
-    enemies.add(enemy)
-    enemy = Enemy(ai_settings, screen)
-    enemy.x = 480
-    enemy.rect.x = enemy.x
-    enemies.add(enemy)
+def create_fleet(ai_settings, screen, enemies, count):
+    enemy_x = [0, 240, 480]
+    numpy.random.shuffle(enemy_x)
+    if count > 3:
+        count = 3
+    for x in enemy_x[0:count]:
+        enemy = Enemy(ai_settings, screen)
+        enemy.x = x
+        enemy.rect.x = enemy.x
+        enemies.add(enemy)
 
 
 def update_enemies(enemies, enemy_bullets):

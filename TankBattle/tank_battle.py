@@ -30,7 +30,7 @@ def run_game():
     # 创建一个敌人
     # enemy = Enemy(ai_settings, screen)
     # 创建外敌人群
-    gf.create_fleet(ai_settings, screen, enemies)
+    gf.create_fleet(ai_settings, screen, enemies, ai_settings.bullets_allowed)
 
     # 创建一个砖墙编组
     gf.create_map(ai_settings, screen)
@@ -67,6 +67,11 @@ def run_game():
                     wait_count = 0
                     stats.game_step = GameStep.start
             elif stats.game_step == GameStep.start:
+                wait_count += 1
+                if wait_count == 1000:
+                    wait_count = 0
+                    if len(enemies) < ai_settings.enemies_allowed:
+                        gf.create_fleet(ai_settings, screen, enemies, ai_settings.enemies_allowed - len(enemies))
                 tank.update()
                 # enemy.upadte(bullets)
                 gf.update_bullets(enemies, tank, bullets, enemy_bullets, screen, stats)
