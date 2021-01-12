@@ -3,6 +3,7 @@ import sys
 import numpy
 import pygame
 
+import random
 import tank_map
 from enumClass import Direction, MapType, GameStep
 from bullet import Bullet
@@ -211,11 +212,14 @@ def fire_bullet(ai_settings, screen, tank, bullets):
         tank.bullet_count += 1
 
 
-def create_fleet(ai_settings, screen, enemies, count):
+def create_fleet(ai_settings, screen, enemies):
     enemy_x = [0, 240, 480]
     numpy.random.shuffle(enemy_x)
-    if count > 3:
-        count = 3
+    rand_int = random.randint(1, 3)
+    if len(enemies) + rand_int > ai_settings.enemies_allowed:
+        count = ai_settings.enemies_allowed - len(enemies)
+    else:
+        count = rand_int
     for x in enemy_x[0:count]:
         enemy = Enemy(ai_settings, screen)
         enemy.x = x
