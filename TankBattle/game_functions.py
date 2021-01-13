@@ -5,6 +5,7 @@ import pygame
 
 import random
 import tank_map
+from boom import Boom
 from enumClass import Direction, MapType, GameStep
 from bullet import Bullet
 from enemy import Enemy
@@ -26,7 +27,7 @@ def check_events(ai_settings, screen, tank, bullets, stats):
         #         stats.game_step = GameStep.ready
 
 
-def update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets):
+def update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets, booms):
     """更新屏幕上的图像，并切换到新屏幕"""
     # 每次循环时都重绘屏幕
     screen.fill(ai_settings.bg_color)
@@ -43,6 +44,10 @@ def update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets):
     # enemy.blitme()
     # enemies.draw(screen)
 
+    # 重绘所有炸弹
+    for boom in booms.sprites():
+        boom.blit_me()
+        
     # 重绘地图
     bricks = tank_map.get_map(MapType.brick.name)
     bricks.draw(screen)
@@ -54,6 +59,7 @@ def update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets):
     grassland.draw(screen)
     home = tank_map.get_map(MapType.home.name)
     home.blit_me()
+
     # 让最近绘制的屏幕可见
     pygame.display.flip()
 
@@ -108,38 +114,46 @@ def check_keyup_events(event, tank, stats):
             tank.direction_priority.remove(Direction.down)
 
 
-def update_bullets(enemies, tank, bullets, enemy_bullets, screen, stats):
+def update_bullets(ai_settings, enemies, tank, bullets, enemy_bullets, screen, stats, booms):
     """更新子弹的位置，并删除已消失的子弹"""
     # 更新子弹的位置
     bullets.update()
     enemy_bullets.update()
 
     # 删除子弹
-    delete_bullets(enemies, tank, bullets, enemy_bullets, screen, stats)
+    delete_bullets(ai_settings, enemies, tank, bullets, enemy_bullets, screen, stats, booms)
 
 
-def delete_bullets(enemies, tank, bullets, enemy_bullets, screen, stats):
+def delete_bullets(ai_settings, enemies, tank, bullets, enemy_bullets, screen, stats, booms):
     # 删除已消失的子弹
     for bullet in bullets.copy():
-        if bullet.rect.bottom <= 0:
+        if bullet.rect.top <= 0:
             bullets.remove(bullet)
             bullet.owner.bullet_count -= 1
+            # 显示爆炸
+            show_boom(ai_settings, screen, booms, bullet.x, bullet.y)
             # print(len(bullets))
         if bullet.rect.right >= screen.get_rect().right:
             bullets.remove(bullet)
             bullet.owner.bullet_count -= 1
+            # 显示爆炸
+            show_boom(ai_settings, screen, booms, bullet.x, bullet.y)
             # print(len(bullets))
-        if bullet.rect.right <= 0:
+        if bullet.rect.left <= 0:
             bullets.remove(bullet)
             bullet.owner.bullet_count -= 1
+            # 显示爆炸
+            show_boom(ai_settings, screen, booms, bullet.x, bullet.y)
             # print(len(bullets))
         if bullet.rect.bottom >= screen.get_rect().bottom:
             bullets.remove(bullet)
             bullet.owner.bullet_count -= 1
+            # 显示爆炸
+            show_boom(ai_settings, screen, booms, bullet.x, bullet.y)
             # print(len(bullets))
     # 删除已消失的子弹
     for bullet in enemy_bullets.copy():
-        if bullet.rect.bottom <= 0:
+        if bullet.rect.top <= 0:
             enemy_bullets.remove(bullet)
             bullet.owner.bullet_count -= 1
             # print(len(bullets))
@@ -147,7 +161,7 @@ def delete_bullets(enemies, tank, bullets, enemy_bullets, screen, stats):
             enemy_bullets.remove(bullet)
             bullet.owner.bullet_count -= 1
             # print(len(bullets))
-        if bullet.rect.right <= 0:
+        if bullet.rect.left <= 0:
             enemy_bullets.remove(bullet)
             bullet.owner.bullet_count -= 1
             # print(len(bullets))
@@ -168,6 +182,8 @@ def delete_bullets(enemies, tank, bullets, enemy_bullets, screen, stats):
     #     print(collisions)
     for bullet, kill_enemies in collisions.items():
         bullet.owner.bullet_count -= 1
+        # 显示爆炸
+        show_boom(ai_settings, screen, booms, bullet.x, bullet.y)
         for enemy in kill_enemies:
             enemies.remove(enemy)
 
@@ -176,6 +192,8 @@ def delete_bullets(enemies, tank, bullets, enemy_bullets, screen, stats):
     collisions = pygame.sprite.groupcollide(bullets, bricks, True, True)
     for bullet in collisions.keys():
         bullet.owner.bullet_count -= 1
+        # 显示爆炸
+        show_boom(ai_settings, screen, booms, bullet.x, bullet.y)
     collisions = pygame.sprite.groupcollide(enemy_bullets, bricks, True, True)
     for bullet in collisions.keys():
         bullet.owner.bullet_count -= 1
@@ -184,6 +202,8 @@ def delete_bullets(enemies, tank, bullets, enemy_bullets, screen, stats):
     collisions = pygame.sprite.groupcollide(bullets, steels, True, False)
     for bullet in collisions.keys():
         bullet.owner.bullet_count -= 1
+        # 显示爆炸
+        show_boom(ai_settings, screen, booms, bullet.x, bullet.y)
     collisions = pygame.sprite.groupcollide(enemy_bullets, steels, True, False)
     for bullet in collisions.keys():
         bullet.owner.bullet_count -= 1
@@ -201,6 +221,13 @@ def delete_bullets(enemies, tank, bullets, enemy_bullets, screen, stats):
     if len(collisions) > 0:
         WallHome.break_home(home)
         stats.game_active = False
+
+
+def show_boom(ai_settings, screen, booms, x, y):
+    new_boom = Boom(ai_settings, screen)
+    new_boom.centerx = x
+    new_boom.centery = y
+    booms.add(new_boom)
 
 
 def fire_bullet(ai_settings, screen, tank, bullets):
@@ -229,6 +256,10 @@ def create_fleet(ai_settings, screen, enemies):
 
 def update_enemies(enemies, enemy_bullets):
     enemies.update(enemy_bullets)
+
+
+def update_booms(booms):
+    booms.update(booms)
 
 
 def create_map(ai_settings, screen):

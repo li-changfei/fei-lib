@@ -34,7 +34,8 @@ def run_game():
 
     # 创建一个砖墙编组
     gf.create_map(ai_settings, screen)
-
+    # 创建一个炸弹的编组
+    booms = Group()
     # bg_color = (230, 230, 230)
 
     stats = GameStats(ai_settings)
@@ -74,9 +75,10 @@ def run_game():
                         gf.create_fleet(ai_settings, screen, enemies)
                 tank.update()
                 # enemy.upadte(bullets)
-                gf.update_bullets(enemies, tank, bullets, enemy_bullets, screen, stats)
+                gf.update_bullets(ai_settings, enemies, tank, bullets, enemy_bullets, screen, stats, booms)
                 gf.update_enemies(enemies, enemy_bullets)
-                gf.update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets)
+                gf.update_booms(booms)
+                gf.update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets, booms)
                 # print(len(enemy_bullets))
         else:
             text_surface = font.render(u'Game Over', False, ai_settings.failed_color)

@@ -11,13 +11,13 @@ class Settings():
         self.tank_speed_factor = 1
         # 子弹设置
         self.bullet_speed_factor = 1.5
-        self.bullet_width_h = 10
+        self.bullet_width_h = 3
         self.bullet_height_h = 15
         self.bullet_width_v = 15
-        self.bullet_height_v = 10
+        self.bullet_height_v = 3
         self.bullet_color = 60, 60, 60
         self.bullets_allowed = 3
-        self.enemies_allowed = 8
+        self.enemies_allowed = 3
         self.enemy_transform = 0
         self.map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
