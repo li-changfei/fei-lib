@@ -69,7 +69,7 @@ def run_game():
                     stats.game_step = GameStep.start
             elif stats.game_step == GameStep.start:
                 wait_count += 1
-                if wait_count == 10:
+                if wait_count == 500:
                     wait_count = 0
                     if len(enemies) < ai_settings.enemies_allowed:
                         gf.create_fleet(ai_settings, screen, enemies)

@@ -186,6 +186,9 @@ def delete_bullets(ai_settings, enemies, tank, bullets, enemy_bullets, screen, s
         show_boom(ai_settings, screen, booms, bullet.x, bullet.y)
         for enemy in kill_enemies:
             enemies.remove(enemy)
+            ai_settings.enemies_allowed -= 1
+        if  ai_settings.enemies_allowed == 0:
+            stats.game_active = False
 
     # 子弹打到砖墙时动作
     bricks = tank_map.get_map(MapType.brick.name)
