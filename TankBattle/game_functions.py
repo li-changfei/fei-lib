@@ -47,7 +47,7 @@ def update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets, bo
     # 重绘所有炸弹
     for boom in booms.sprites():
         boom.blit_me()
-        
+
     # 重绘地图
     bricks = tank_map.get_map(MapType.brick.name)
     bricks.draw(screen)
@@ -59,6 +59,7 @@ def update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets, bo
     grassland.draw(screen)
     home = tank_map.get_map(MapType.home.name)
     home.blit_me()
+
 
     # 让最近绘制的屏幕可见
     pygame.display.flip()
@@ -325,3 +326,13 @@ def start_image_update(tank, screen):
     tank.blit_me()
     pygame.display.flip()
 
+
+def over_image_update(screen):
+    button_image = pygame.image.load('images/game_over.png')
+    button_image = pygame.transform.scale(button_image, (screen.get_rect().width, screen.get_rect().height))
+    button_rect = button_image.get_rect()
+    button_rect.x = 0
+    button_rect.y = 0
+    screen.blit(button_image, button_rect)
+
+    pygame.display.flip()

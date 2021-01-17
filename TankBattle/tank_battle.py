@@ -81,13 +81,8 @@ def run_game():
                 gf.update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets, booms)
                 # print(len(enemy_bullets))
         else:
-            text_surface = font.render(u'Game Over', False, ai_settings.failed_color)
-            text_rect = text_surface.get_rect()
-            text_rect.centerx = screen.get_rect().centerx
-            text_rect.centery = screen.get_rect().centery
+            gf.over_image_update(screen)
 
-            screen.blit(text_surface, text_rect)
-            pygame.display.flip()
 
 
 run_game()

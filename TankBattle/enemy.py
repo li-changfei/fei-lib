@@ -16,8 +16,10 @@ class Enemy(Sprite):
         self.screen = screen
         self.ai_settings = ai_settings
         # 加载坦克图像并获取其外接矩形
-        self.moving_image = pygame.image.load('images/tank_enemy.jpg')
-        self.image = pygame.image.load('images/tank_enemy.jpg')
+        self.moving_image = pygame.image.load('images/tank_enemy.jpg').convert()
+        self.image = pygame.image.load('images/tank_enemy.jpg').convert()
+        self.moving_image.set_colorkey((0, 0, 0))
+        self.image.set_colorkey((0, 0, 0))
         self.rect = self.moving_image.get_rect()
         self.screen_rect = screen.get_rect()
         # 将每艘新坦克放在屏幕底部中央

@@ -10,14 +10,21 @@ class Bullet(Sprite):
         """在坦克所处的位置创建一个子弹对象"""
         super(Bullet, self).__init__()
         self.screen = screen
+        self.moving_image = pygame.image.load('images/bullet.png')
+        self.image = pygame.image.load('images/bullet.png')
+
         if tank.direction == Direction.up:
-            # 在(0,0)处创建一个表示子弹的矩形，再设置正确的位置
-            self.rect = pygame.Rect(0, 0, ai_settings.bullet_width_h, ai_settings.bullet_height_h)
+            self.rect = self.moving_image.get_rect()
+            # # 在(0,0)处创建一个表示子弹的矩形，再设置正确的位置
+            # self.rect = pygame.Rect(0, 0, ai_settings.bullet_width_h, ai_settings.bullet_height_h)
             self.rect.centerx = tank.rect.centerx
             self.rect.top = tank.rect.top
-            # 存储用小数表示的子弹位置
+            # # 存储用小数表示的子弹位置
             # 子弹上下移动的时候移动计算用
             self.y = float(self.rect.y)
+
+            self.transform(Direction.up)
+
         elif tank.direction == Direction.right:
             # 在(0,0)处创建一个表示子弹的矩形，再设置正确的位置
             self.rect = pygame.Rect(0, 0, ai_settings.bullet_width_v, ai_settings.bullet_height_v)
@@ -74,6 +81,16 @@ class Bullet(Sprite):
             self.y += self.speed_factor
             # 更新表示子弹的rect的位置
             self.rect.y = self.y
+
+    def transform(self, direction):
+        if direction == Direction.right:
+            self.moving_image = pygame.transform.rotate(self.image, 270)
+        elif direction == Direction.left:
+            self.moving_image = pygame.transform.rotate(self.image, 90)
+        elif direction == Direction.up:
+            self.moving_image = pygame.transform.rotate(self.image, 0)
+        elif direction == Direction.down:
+            self.moving_image = pygame.transform.rotate(self.image, 180)
 
     def draw_bullet(self):
         """在屏幕上绘制子弹"""

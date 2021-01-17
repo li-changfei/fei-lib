@@ -12,10 +12,17 @@ class Boom(Sprite):
         self.ai_settings = ai_settings
         self.screen = screen
         # 加载爆炸图像并获取其外接矩形
-        self.master_image = [pygame.image.load('images/boom0.jpg'),
-                             pygame.image.load('images/boom1.jpg'),
-                             pygame.image.load('images/boom2.jpg')]
-        self.image = pygame.image.load('images/boom2.jpg')
+        self.image00 = pygame.image.load('images/boom0.png').convert()
+        self.image00.set_colorkey((0, 0, 0))
+        self.image01 = pygame.image.load('images/boom1.png').convert()
+        self.image01.set_colorkey((0, 0, 0))
+        self.image02 = pygame.image.load('images/boom2.png').convert()
+        self.image02.set_colorkey((0, 0, 0))
+        self.master_image = [self.image00,
+                             self.image01,
+                             self.image02]
+        self.image = pygame.image.load('images/boom2.png').convert()
+        self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
         self.frame = 0
         self.old_frame = -1
