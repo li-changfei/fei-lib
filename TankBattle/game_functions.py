@@ -13,21 +13,21 @@ from wall import WallBrick, WallSteel, WallSeawater, WallGrassland, WallHome
 from pygame.sprite import Group
 
 
-def check_events(ai_settings, screen, tank, bullets, stats):
+def check_events(ai_settings, screen, tank, tank2, bullets, stats):
     """相应键盘和鼠标事件"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            check_keydown_events(event, ai_settings, screen, tank, bullets, stats)
+            check_keydown_events(event, ai_settings, screen, tank, tank2, bullets, stats)
         elif event.type == pygame.KEYUP:
-            check_keyup_events(event, tank, stats)
+            check_keyup_events(event, tank, tank2, stats)
         # elif event.type == pygame.MOUSEBUTTONDOWN:
         #     if stats.game_step == GameStep.init:
         #         stats.game_step = GameStep.ready
 
 
-def update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets, booms):
+def update_screen(ai_settings, screen, tank, tank2, enemies, bullets, enemy_bullets, booms):
     """更新屏幕上的图像，并切换到新屏幕"""
     # 每次循环时都重绘屏幕
     screen.fill(ai_settings.bg_color)
@@ -41,6 +41,10 @@ def update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets, bo
     for enemy in enemies.sprites():
         enemy.blit_me()
     tank.blit_me()
+    tank.blit_invincible()
+    if tank2 is not None:
+        tank2.blit_me()
+        tank2.blit_invincible()
     # enemy.blitme()
     # enemies.draw(screen)
 
@@ -60,12 +64,11 @@ def update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets, bo
     home = tank_map.get_map(MapType.home.name)
     home.blit_me()
 
-
     # 让最近绘制的屏幕可见
     pygame.display.flip()
 
 
-def check_keydown_events(event, ai_settings, screen, tank, bullets, stats):
+def check_keydown_events(event, ai_settings, screen, tank, tank2, bullets, stats):
     if stats.game_step == GameStep.init:
         if event.key == pygame.K_UP:
             if tank.y == 280:
@@ -76,6 +79,8 @@ def check_keydown_events(event, ai_settings, screen, tank, bullets, stats):
                 tank.y = 245
             tank.y += 35
         elif event.key == pygame.K_SPACE:
+            if tank.y > 245:
+                ai_settings.has_tank2 = True
             tank.x = 180
             tank.rect.bottom = screen.get_rect().bottom
             tank.y = tank.rect.y
@@ -97,9 +102,24 @@ def check_keydown_events(event, ai_settings, screen, tank, bullets, stats):
             tank.direction_priority.append(Direction.down)
         elif event.key == pygame.K_SPACE:
             fire_bullet(ai_settings, screen, tank, bullets)
+        elif event.key == pygame.K_d:
+            # 坦克右移
+            tank2.moving_right = True
+            tank2.direction_priority.append(Direction.right)
+        elif event.key == pygame.K_a:
+            tank2.moving_left = True
+            tank2.direction_priority.append(Direction.left)
+        elif event.key == pygame.K_w:
+            tank2.moving_up = True
+            tank2.direction_priority.append(Direction.up)
+        elif event.key == pygame.K_s:
+            tank2.moving_down = True
+            tank2.direction_priority.append(Direction.down)
+        elif event.key == pygame.K_j:
+            fire_bullet(ai_settings, screen, tank2, bullets)
 
 
-def check_keyup_events(event, tank, stats):
+def check_keyup_events(event, tank, tank2, stats):
     if stats.game_step == GameStep.start:
         if event.key == pygame.K_RIGHT:
             tank.moving_right = False
@@ -113,19 +133,31 @@ def check_keyup_events(event, tank, stats):
         elif event.key == pygame.K_DOWN:
             tank.moving_down = False
             tank.direction_priority.remove(Direction.down)
+        if event.key == pygame.K_d:
+            tank2.moving_right = False
+            tank2.direction_priority.remove(Direction.right)
+        elif event.key == pygame.K_a:
+            tank2.moving_left = False
+            tank2.direction_priority.remove(Direction.left)
+        elif event.key == pygame.K_w:
+            tank2.moving_up = False
+            tank2.direction_priority.remove(Direction.up)
+        elif event.key == pygame.K_s:
+            tank2.moving_down = False
+            tank2.direction_priority.remove(Direction.down)
 
 
-def update_bullets(ai_settings, enemies, tank, bullets, enemy_bullets, screen, stats, booms):
+def update_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, screen, stats, booms):
     """更新子弹的位置，并删除已消失的子弹"""
     # 更新子弹的位置
     bullets.update()
     enemy_bullets.update()
 
     # 删除子弹
-    delete_bullets(ai_settings, enemies, tank, bullets, enemy_bullets, screen, stats, booms)
+    delete_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, screen, stats, booms)
 
 
-def delete_bullets(ai_settings, enemies, tank, bullets, enemy_bullets, screen, stats, booms):
+def delete_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, screen, stats, booms):
     # 删除已消失的子弹
     for bullet in bullets.copy():
         if bullet.rect.top <= 0:
@@ -213,8 +245,12 @@ def delete_bullets(ai_settings, enemies, tank, bullets, enemy_bullets, screen, s
         bullet.owner.bullet_count -= 1
     # 被敌人子弹攻击后触发
     collisions = pygame.sprite.spritecollide(tank, enemy_bullets, True)
-    if len(collisions) > 0:
+    if len(collisions) > 0 and not tank.is_invincible:
         stats.game_active = False
+    if tank2 is not None:
+        collisions = pygame.sprite.spritecollide(tank2, enemy_bullets, True)
+        if len(collisions) > 0 and not tank2.is_invincible:
+            stats.game_active = False
     # 老家被打到
     home = tank_map.get_map(MapType.home.name)
     collisions = pygame.sprite.spritecollide(home, enemy_bullets, True)
@@ -328,7 +364,8 @@ def start_image_update(tank, screen):
 
 
 def over_image_update(screen):
-    button_image = pygame.image.load('images/game_over.png')
+    button_image = pygame.image.load('images/game_over.png').convert()
+    button_image.set_alpha(10)
     button_image = pygame.transform.scale(button_image, (screen.get_rect().width, screen.get_rect().height))
     button_rect = button_image.get_rect()
     button_rect.x = 0

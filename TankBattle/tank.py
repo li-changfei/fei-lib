@@ -5,13 +5,25 @@ from enumClass import Direction, MapType
 
 
 class Tank:
-    def __init__(self, ai_settings, screen):
+    def __init__(self, ai_settings, screen, cnt=1):
         # 初期化
         self.screen = screen
         self.ai_settings = ai_settings
         # 加载坦克图像并获取其外接矩形
         self.moving_image = pygame.image.load('images/tank_y.jpg')
         self.image = pygame.image.load('images/tank_y.jpg')
+        self.invincible_image = pygame.image.load('images/invincible1.png').convert()
+        self.invincible_image.set_colorkey((0, 0, 0))
+        self.invincible_rect = self.invincible_image.get_rect()
+
+        image1 = pygame.image.load('images/invincible1.png').convert()
+        image1.set_colorkey((0, 0, 0))
+        image2 = pygame.image.load('images/invincible2.png').convert()
+        image2.set_colorkey((0, 0, 0))
+        image3 = pygame.image.load('images/invincible3.png').convert()
+        image3.set_colorkey((0, 0, 0))
+        self.invincible_images = [image1, image2, image3]
+
         self.rect = self.moving_image.get_rect()
         self.screen_rect = screen.get_rect()
         # 将每艘新坦克放在屏幕底部中央
@@ -19,7 +31,10 @@ class Tank:
         # self.y = self.rect.y
         # self.rect.x = self.x
         # self.rect.bottom = self.screen_rect.bottom
-        self.x = 120
+        if cnt > 1:
+            self.x = 200
+        else:
+            self.x = 120
         self.y = 280
         # 移动标志
         self.moving_right = False
@@ -33,12 +48,27 @@ class Tank:
         self.hasCollide = False
         # 坦克移动方向优先度
         self.direction_priority = []
+        # 是不是无敌
+        self.is_invincible = True
+
+        self.invincible_frame = 0
 
     def blit_me(self):
         """在指定位置绘制飞船"""
         self.screen.blit(self.moving_image, self.rect)
 
+    def blit_invincible(self):
+        """在指定位置绘制飞船"""
+        if self.is_invincible:
+            self.screen.blit(self.invincible_image, self.invincible_rect)
+
     def update(self):
+        if self.is_invincible:
+            if self.invincible_frame > 2:
+                self.invincible_frame = 0
+            self.invincible_image = self.invincible_images[self.invincible_frame]
+            self.invincible_frame += 1
+
         """持续运动"""
         if self.must_stop():
             if self.moving_right:
@@ -66,6 +96,8 @@ class Tank:
         # 根据self.x更新rect对象
         self.rect.x = self.x
         self.rect.y = self.y
+        self.invincible_rect.x = self.x-1
+        self.invincible_rect.y = self.y-1
 
     def transform(self, direction):
         if direction == Direction.right:

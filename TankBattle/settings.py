@@ -9,6 +9,8 @@ class Settings():
         self.failed_color = (255, 0, 0)
         # 坦克的设置
         self.tank_speed_factor = 1
+        # 有没有第二个英雄
+        self.has_tank2 = False
         # 子弹设置
         self.bullet_speed_factor = 1.5
         self.bullet_width_h = 3

@@ -21,6 +21,8 @@ def run_game():
 
     # 创建一个坦克
     tank = Tank(ai_settings, screen)
+    tank2 = None
+
     # 创建一个子弹分组
     bullets = Group()
     # 创建一个敌人子弹分组
@@ -46,11 +48,12 @@ def run_game():
     clock = pygame.time.Clock()
 
     wait_count = 0
+    invincible_count = 0
     # 开启游戏主循环
     while True:
         clock.tick(100)
         # 监视键盘鼠标
-        gf.check_events(ai_settings, screen, tank, bullets, stats)
+        gf.check_events(ai_settings, screen, tank, tank2, bullets, stats)
 
         if stats.game_active:
             if stats.game_step == GameStep.init:
@@ -68,17 +71,31 @@ def run_game():
                     wait_count = 0
                     stats.game_step = GameStep.start
             elif stats.game_step == GameStep.start:
+                if ai_settings.has_tank2 and tank2 is None:
+                    tank2 = Tank(ai_settings, screen, 2)
+                    tank2.x = 300
+                    tank2.rect.bottom = screen.get_rect().bottom
+                    tank2.y = tank2.rect.y
+                    tank2.moving_image = tank2.image
+
                 wait_count += 1
                 if wait_count == 500:
                     wait_count = 0
                     if len(enemies) < ai_settings.enemies_allowed:
                         gf.create_fleet(ai_settings, screen, enemies)
+                if tank.is_invincible:
+                    invincible_count += 1
+                if invincible_count == 1400:
+                    tank.is_invincible = False
+                    tank2.is_invincible = False
                 tank.update()
+                if tank2 is not None:
+                    tank2.update()
                 # enemy.upadte(bullets)
-                gf.update_bullets(ai_settings, enemies, tank, bullets, enemy_bullets, screen, stats, booms)
+                gf.update_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, screen, stats, booms)
                 gf.update_enemies(enemies, enemy_bullets)
                 gf.update_booms(booms)
-                gf.update_screen(ai_settings, screen, tank, enemies, bullets, enemy_bullets, booms)
+                gf.update_screen(ai_settings, screen, tank, tank2, enemies, bullets, enemy_bullets, booms)
                 # print(len(enemy_bullets))
         else:
             gf.over_image_update(screen)
