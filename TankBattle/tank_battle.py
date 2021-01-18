@@ -85,7 +85,7 @@ def run_game():
                         gf.create_fleet(ai_settings, screen, enemies)
                 if tank.is_invincible:
                     invincible_count += 1
-                if invincible_count == 1400:
+                if invincible_count == 400:
                     tank.is_invincible = False
                     if tank2 is not None:
                         tank2.is_invincible = False

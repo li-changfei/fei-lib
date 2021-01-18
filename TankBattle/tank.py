@@ -12,6 +12,9 @@ class Tank:
         # 加载坦克图像并获取其外接矩形
         self.moving_image = pygame.image.load('images/tank_y.jpg')
         self.image = pygame.image.load('images/tank_y.jpg')
+        if cnt > 1:
+            self.moving_image = pygame.image.load('images/tank2.png')
+            self.image = pygame.image.load('images/tank2.png')
         self.invincible_image = pygame.image.load('images/invincible1.png').convert()
         self.invincible_image.set_colorkey((0, 0, 0))
         self.invincible_rect = self.invincible_image.get_rect()
