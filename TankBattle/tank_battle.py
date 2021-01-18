@@ -87,7 +87,8 @@ def run_game():
                     invincible_count += 1
                 if invincible_count == 1400:
                     tank.is_invincible = False
-                    tank2.is_invincible = False
+                    if tank2 is not None:
+                        tank2.is_invincible = False
                 tank.update()
                 if tank2 is not None:
                     tank2.update()

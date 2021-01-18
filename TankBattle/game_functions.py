@@ -79,7 +79,7 @@ def check_keydown_events(event, ai_settings, screen, tank, tank2, bullets, stats
                 tank.y = 245
             tank.y += 35
         elif event.key == pygame.K_SPACE:
-            if tank.y > 245:
+            if tank.y > 280:
                 ai_settings.has_tank2 = True
             tank.x = 180
             tank.rect.bottom = screen.get_rect().bottom
@@ -102,21 +102,23 @@ def check_keydown_events(event, ai_settings, screen, tank, tank2, bullets, stats
             tank.direction_priority.append(Direction.down)
         elif event.key == pygame.K_SPACE:
             fire_bullet(ai_settings, screen, tank, bullets)
-        elif event.key == pygame.K_d:
-            # 坦克右移
-            tank2.moving_right = True
-            tank2.direction_priority.append(Direction.right)
-        elif event.key == pygame.K_a:
-            tank2.moving_left = True
-            tank2.direction_priority.append(Direction.left)
-        elif event.key == pygame.K_w:
-            tank2.moving_up = True
-            tank2.direction_priority.append(Direction.up)
-        elif event.key == pygame.K_s:
-            tank2.moving_down = True
-            tank2.direction_priority.append(Direction.down)
-        elif event.key == pygame.K_j:
-            fire_bullet(ai_settings, screen, tank2, bullets)
+
+        if tank2 is not None:
+            if event.key == pygame.K_d:
+                # 坦克右移
+                tank2.moving_right = True
+                tank2.direction_priority.append(Direction.right)
+            elif event.key == pygame.K_a:
+                tank2.moving_left = True
+                tank2.direction_priority.append(Direction.left)
+            elif event.key == pygame.K_w:
+                tank2.moving_up = True
+                tank2.direction_priority.append(Direction.up)
+            elif event.key == pygame.K_s:
+                tank2.moving_down = True
+                tank2.direction_priority.append(Direction.down)
+            elif event.key == pygame.K_j:
+                fire_bullet(ai_settings, screen, tank2, bullets)
 
 
 def check_keyup_events(event, tank, tank2, stats):
@@ -133,18 +135,19 @@ def check_keyup_events(event, tank, tank2, stats):
         elif event.key == pygame.K_DOWN:
             tank.moving_down = False
             tank.direction_priority.remove(Direction.down)
-        if event.key == pygame.K_d:
-            tank2.moving_right = False
-            tank2.direction_priority.remove(Direction.right)
-        elif event.key == pygame.K_a:
-            tank2.moving_left = False
-            tank2.direction_priority.remove(Direction.left)
-        elif event.key == pygame.K_w:
-            tank2.moving_up = False
-            tank2.direction_priority.remove(Direction.up)
-        elif event.key == pygame.K_s:
-            tank2.moving_down = False
-            tank2.direction_priority.remove(Direction.down)
+        if tank2 is not None:
+            if event.key == pygame.K_d:
+                tank2.moving_right = False
+                tank2.direction_priority.remove(Direction.right)
+            elif event.key == pygame.K_a:
+                tank2.moving_left = False
+                tank2.direction_priority.remove(Direction.left)
+            elif event.key == pygame.K_w:
+                tank2.moving_up = False
+                tank2.direction_priority.remove(Direction.up)
+            elif event.key == pygame.K_s:
+                tank2.moving_down = False
+                tank2.direction_priority.remove(Direction.down)
 
 
 def update_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, screen, stats, booms):
