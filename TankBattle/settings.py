@@ -4,7 +4,7 @@ class Settings():
     def __init__(self):
         # 屏幕设定
         self.screen_width = 520
-        self.screen_height = 520
+        self.screen_height = 540
         self.bg_color = (0, 0, 0)
         self.failed_color = (255, 0, 0)
         # 坦克的设置

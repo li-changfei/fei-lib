@@ -127,7 +127,7 @@ class Tank:
             return True
         if self.moving_up and self.rect.top <= 0:
             return True
-        if self.moving_down and self.rect.bottom >= self.screen_rect.bottom:
+        if self.moving_down and self.rect.bottom >= self.screen_rect.bottom - 20:
             return True
 
         # if self.hasCollide:

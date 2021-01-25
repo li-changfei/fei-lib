@@ -82,7 +82,7 @@ def check_keydown_events(event, ai_settings, screen, tank, tank2, bullets, stats
             if tank.y > 280:
                 ai_settings.has_tank2 = True
             tank.x = 180
-            tank.rect.bottom = screen.get_rect().bottom
+            tank.rect.bottom = screen.get_rect().bottom - 20
             tank.y = tank.rect.y
             tank.moving_image = tank.image
             stats.game_step = GameStep.ready
@@ -349,7 +349,7 @@ def create_map(ai_settings, screen):
     # 创建老家
     my_home = WallHome(ai_settings, screen)
     my_home.rect.x = 240
-    my_home.rect.bottom = screen.get_rect().bottom
+    my_home.rect.bottom = screen.get_rect().bottom - 20
     tank_map.set_map(MapType.home.name, my_home)
 
 
