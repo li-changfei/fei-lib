@@ -74,7 +74,7 @@ def run_game():
                 if ai_settings.has_tank2 and tank2 is None:
                     tank2 = Tank(ai_settings, screen, 2)
                     tank2.x = 300
-                    tank2.rect.bottom = screen.get_rect().bottom + 20
+                    tank2.rect.bottom = screen.get_rect().bottom - 20
                     tank2.y = tank2.rect.y
                     tank2.moving_image = tank2.image
 
