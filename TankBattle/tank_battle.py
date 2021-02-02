@@ -15,6 +15,7 @@ def run_game():
     # 初期化一个
     pygame.init()
     ai_settings = Settings()
+    tank_map.set_map("user_id", "")
 
     screen = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
     pygame.display.set_caption("Tank Battle")
@@ -58,7 +59,10 @@ def run_game():
         if stats.game_active:
             if stats.game_step == GameStep.login:
                 wait_count += 1
-                gf.login(screen,wait_count,0)
+
+                gf.login(screen, wait_count, tank_map.get_map("user_id"))
+                if wait_count > 100:
+                    wait_count = 0
             elif stats.game_step == GameStep.init:
                 wait_count = 0
                 gf.start_image_update(tank, screen)

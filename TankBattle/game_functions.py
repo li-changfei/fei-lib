@@ -69,7 +69,9 @@ def update_screen(ai_settings, screen, tank, tank2, enemies, bullets, enemy_bull
 
 
 def check_keydown_events(event, ai_settings, screen, tank, tank2, bullets, stats):
-    if stats.game_step == GameStep.init:
+    if stats.game_step == GameStep.login:
+        input_text(str(event.unicode))
+    elif stats.game_step == GameStep.init:
         if event.key == pygame.K_UP:
             if tank.y == 280:
                 tank.y = 385
@@ -378,21 +380,39 @@ def over_image_update(screen):
     pygame.display.flip()
 
 
-def login(screen, count, index):
+def login(screen, count, user_id):
+    location = (100, 150, 200, 250, 300)
+    # 创建一个Font对象
+    font = pygame.font.SysFont("arial", 36)
+    font.set_bold(True)
+    index = 0
+    for index_str in user_id:
+        index += 1
+        text_user_id = font.render(index_str, False, (255, 255, 255))
+        text_rect = text_user_id.get_rect()
+        text_rect.x = location(index)
+        text_rect.y = 100
 
+        screen.blit(text_user_id, text_rect)
     rect = pygame.Rect(0, 0, 20, 20)
-    rect.x = 100
+    rect.x = 100 + 50 * index
     rect.y = 100
     if (count % 100) > 50:
         pygame.draw.rect(screen, (60, 60, 60), rect)
     else:
         pygame.draw.rect(screen, (0, 0, 0), rect)
-    # 创建一个Font对象
-    font = pygame.font.SysFont("arial", 36)
-    font.set_bold(True)
+
     text_surface = font.render(u'Please enter your user ', False, (255, 255, 255))
     text_rect = text_surface.get_rect()
     text_rect.centerx = screen.get_rect().centerx
     text_rect.centery = screen.get_rect().centery
     screen.blit(text_surface, text_rect)
     pygame.display.flip()
+
+
+def input_text(value):
+    user_id = tank_map.get_map("user_id")
+    user_id = user_id + str(value)
+    tank_map.set_map("user_id", user_id)
+
+
