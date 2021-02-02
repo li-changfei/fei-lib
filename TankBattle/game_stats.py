@@ -7,7 +7,7 @@ class GameStats():
         """初始化统计信息"""
         self.ai_settings = ai_settings
         self.game_active = True
-        self.game_step = GameStep.init
+        self.game_step = GameStep.login
         self.level = 1
         # self.reset_stats()
 

@@ -19,9 +19,10 @@ class MapType(Enum):
 
 
 class GameStep(Enum):
-    init = 0
-    ready = 1
-    start = 2
-    levelChange = 3
-    over = 4
-    stop = 5
+    login = 0
+    init = 1
+    ready = 2
+    start = 3
+    levelChange = 4
+    over = 5
+    stop = 6

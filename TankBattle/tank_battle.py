@@ -56,7 +56,11 @@ def run_game():
         gf.check_events(ai_settings, screen, tank, tank2, bullets, stats)
 
         if stats.game_active:
-            if stats.game_step == GameStep.init:
+            if stats.game_step == GameStep.login:
+                wait_count += 1
+                gf.login(screen,wait_count,0)
+            elif stats.game_step == GameStep.init:
+                wait_count = 0
                 gf.start_image_update(tank, screen)
             elif stats.game_step == GameStep.ready:
                 wait_count += 1

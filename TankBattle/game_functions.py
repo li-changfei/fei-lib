@@ -376,3 +376,23 @@ def over_image_update(screen):
     screen.blit(button_image, button_rect)
 
     pygame.display.flip()
+
+
+def login(screen, count, index):
+
+    rect = pygame.Rect(0, 0, 20, 20)
+    rect.x = 100
+    rect.y = 100
+    if (count % 100) > 50:
+        pygame.draw.rect(screen, (60, 60, 60), rect)
+    else:
+        pygame.draw.rect(screen, (0, 0, 0), rect)
+    # 创建一个Font对象
+    font = pygame.font.SysFont("arial", 36)
+    font.set_bold(True)
+    text_surface = font.render(u'Please enter your user ', False, (255, 255, 255))
+    text_rect = text_surface.get_rect()
+    text_rect.centerx = screen.get_rect().centerx
+    text_rect.centery = screen.get_rect().centery
+    screen.blit(text_surface, text_rect)
+    pygame.display.flip()
