@@ -10,7 +10,7 @@ def register(user_id):
 
 def check(user_id):
     sql = "select * from  user_info WHERE user_id = %s"
-    results = coonDB.query(sql, (user_id))
+    results = coonDB.query(sql, (user_id, ))
     if len(results) > 0:
         return False
     else:

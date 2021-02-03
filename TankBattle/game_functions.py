@@ -24,12 +24,12 @@ def check_events(ai_settings, screen, tank, tank2, bullets, stats):
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, tank, tank2, stats)
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            user_id = tank_map.get_map("user_id")
-            if len(user_id) == 0:
-                user_id = "defaultUser"
-                tank_map.set_map("user_id", user_id)
             pos = pygame.mouse.get_pos()
             if 150 < pos[0] < 360 and 300 < pos[1] < 430:
+                user_id = tank_map.get_map("user_id")
+                if len(user_id) == 0:
+                    user_id = "defaultUser"
+                    tank_map.set_map("user_id", user_id)
                 register(user_id)
                 if stats.game_step == GameStep.login:
                     stats.game_step = GameStep.init
@@ -72,13 +72,54 @@ def update_screen(ai_settings, screen, tank, tank2, enemies, bullets, enemy_bull
     home = tank_map.get_map(MapType.home.name)
     home.blit_me()
 
+    # 积分维护
+    font = pygame.font.SysFont("arial", 20)
+    area_y = screen.get_rect().bottom - 20
+
+    rect = pygame.Rect(0, area_y, screen.get_rect().width, 20)
+    pygame.draw.rect(screen, (60, 60, 60), rect)
+
+    text_user_id_lbl = font.render("User :", False, (255, 255, 255))
+    text_rect_lbl = text_user_id_lbl.get_rect()
+    text_rect_lbl.x = 20
+    text_rect_lbl.y = area_y
+
+    user_id = tank_map.get_map("user_id")
+    text_user_id = font.render(user_id, False, (255, 255, 255))
+    text_rect = text_user_id.get_rect()
+    text_rect.x = 120
+    text_rect.y = area_y
+
+    text_score_lbl = font.render("Score :", False, (255, 255, 255))
+    score_rect_lbl = text_score_lbl.get_rect()
+    score_rect_lbl.x = 220
+    score_rect_lbl.y = area_y
+
+    score = tank_map.get_map("score")
+    text_score = font.render(str(score), False, (255, 255, 255))
+    score_rect = text_score.get_rect()
+    score_rect.x = 300
+    score_rect.y = area_y
+
+    screen.blit(text_user_id_lbl, text_rect_lbl)
+    screen.blit(text_user_id, text_rect)
+    screen.blit(text_score_lbl, score_rect_lbl)
+    screen.blit(text_score, score_rect)
+
     # 让最近绘制的屏幕可见
     pygame.display.flip()
 
 
 def check_keydown_events(event, ai_settings, screen, tank, tank2, bullets, stats):
     if stats.game_step == GameStep.login:
-        input_text(str(event.unicode))
+        key = event.key
+        unicode = event.unicode
+
+        if unicode != "":
+            char = unicode
+        else:
+            char = chr(key)
+        input_text(char)
     elif stats.game_step == GameStep.init:
         if event.key == pygame.K_UP:
             if tank.y == 280:
@@ -227,13 +268,16 @@ def delete_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, sc
     # if len(collisions) > 0:
     #     print(collisions)
     for bullet, kill_enemies in collisions.items():
+        score = tank_map.get_map("score")
+        score += 100
+        tank_map.set_map("score", score)
         bullet.owner.bullet_count -= 1
         # 显示爆炸
         show_boom(ai_settings, screen, booms, bullet.x, bullet.y)
         for enemy in kill_enemies:
             enemies.remove(enemy)
             ai_settings.enemies_allowed -= 1
-        if  ai_settings.enemies_allowed == 0:
+        if ai_settings.enemies_allowed == 0:
             stats.game_active = False
 
     # 子弹打到砖墙时动作
@@ -259,11 +303,29 @@ def delete_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, sc
     # 被敌人子弹攻击后触发
     collisions = pygame.sprite.spritecollide(tank, enemy_bullets, True)
     if len(collisions) > 0 and not tank.is_invincible:
-        stats.game_active = False
+        for bullet in collisions:
+            bullet.owner.bullet_count -= 1
+            # 显示爆炸
+            show_boom(ai_settings, screen, booms, bullet.x, bullet.y)
+        score = tank_map.get_map("score")
+        score -= 200
+        tank_map.set_map("score", score)
+        tank.x = 180
+        tank.rect.bottom = screen.get_rect().bottom - 20
+        tank.y = tank.rect.y
+        tank.moving_image = tank.image
+        tank.is_invincible = True
     if tank2 is not None:
         collisions = pygame.sprite.spritecollide(tank2, enemy_bullets, True)
         if len(collisions) > 0 and not tank2.is_invincible:
-            stats.game_active = False
+            score = tank_map.get_map("score")
+            score -= 200
+            tank_map.set_map("score", score)
+            tank2.x = 300
+            tank2.rect.bottom = screen.get_rect().bottom - 20
+            tank2.y = tank.rect.y
+            tank2.moving_image = tank.image
+            tank2.is_invincible = True
     # 老家被打到
     home = tank_map.get_map(MapType.home.name)
     collisions = pygame.sprite.spritecollide(home, enemy_bullets, True)

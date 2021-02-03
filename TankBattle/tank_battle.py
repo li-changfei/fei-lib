@@ -16,6 +16,8 @@ def run_game():
     pygame.init()
     ai_settings = Settings()
     tank_map.set_map("user_id", "")
+    tank_map.set_map("score", 0)
+    tank_map.set_map("double_flg", 0)
 
     screen = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
     pygame.display.set_caption("Tank Battle")
@@ -91,9 +93,10 @@ def run_game():
                     wait_count = 0
                     if len(enemies) < ai_settings.enemies_allowed:
                         gf.create_fleet(ai_settings, screen, enemies)
-                if tank.is_invincible:
+                if tank.is_invincible or (tank2 is not None and tank2.is_invincible):
                     invincible_count += 1
                 if invincible_count == 400:
+                    invincible_count = 0
                     tank.is_invincible = False
                     if tank2 is not None:
                         tank2.is_invincible = False
