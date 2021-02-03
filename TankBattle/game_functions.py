@@ -4,8 +4,11 @@ import numpy
 import pygame
 
 import random
+
+import coonDB
 import tank_map
 from boom import Boom
+from coonDB import update
 from enumClass import Direction, MapType, GameStep
 from bullet import Bullet
 from enemy import Enemy
@@ -278,7 +281,8 @@ def delete_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, sc
             enemies.remove(enemy)
             ai_settings.enemies_allowed -= 1
         if ai_settings.enemies_allowed == 0:
-            stats.game_active = False
+            update_score()
+            stats.game_step = GameStep.total
 
     # 子弹打到砖墙时动作
     bricks = tank_map.get_map(MapType.brick.name)
@@ -331,11 +335,13 @@ def delete_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, sc
     collisions = pygame.sprite.spritecollide(home, enemy_bullets, True)
     if len(collisions) > 0:
         WallHome.break_home(home)
-        stats.game_active = False
+        update_score()
+        stats.game_step = GameStep.total
     collisions = pygame.sprite.spritecollide(home, bullets, True)
     if len(collisions) > 0:
         WallHome.break_home(home)
-        stats.game_active = False
+        update_score()
+        stats.game_step = GameStep.total
 
 
 def show_boom(ai_settings, screen, booms, x, y):
@@ -501,3 +507,77 @@ def input_text(value):
         tank_map.set_map("user_id", user_id)
 
 
+def update_score():
+    sql = "update user_info set score = %s where user_id = %s and double_flg = %s"
+    args = (tank_map.get_map("score"), tank_map.get_map("user_id"), tank_map.get_map("double_flg"))
+    update(sql, args)
+
+
+def show_ranking_list(screen):
+    # 创建一个Font对象
+    font = pygame.font.SysFont("arial", 36)
+    font.set_bold(True)
+    rect = pygame.Rect(0, 0, screen.get_rect().width, screen.get_rect().height)
+    pygame.draw.rect(screen, (0, 0, 0), rect)
+
+    text_surface = font.render(u'RANKING LIST', False, (255, 255, 255))
+    text_rect = text_surface.get_rect()
+    text_rect.centerx = screen.get_rect().centerx
+    text_rect.y = 20
+    screen.blit(text_surface, text_rect)
+
+    font = pygame.font.SysFont("arial", 20)
+    font.set_bold(False)
+    text_surface = font.render(u'SOLO', False, (255, 255, 255))
+    text_rect = text_surface.get_rect()
+    text_rect.centerx = screen.get_rect().width / 4
+    text_rect.y = 40
+    screen.blit(text_surface, text_rect)
+
+    sql = "select * from  user_info WHERE score <> 0 and double_flg = 0 order by score limit 10"
+    results = coonDB.query_no_args(sql)
+    index = 0
+    for row in results:
+        print(row)
+        user_id = row[0]
+        score = row[1]
+        text_surface = font.render(user_id + ":", False, (255, 255, 255))
+        text_rect = text_surface.get_rect()
+        text_rect.centerx = screen.get_rect().width / 4
+        text_rect.y = 60 + 20 * index
+        screen.blit(text_surface, text_rect)
+
+        text_surface = font.render(score, False, (255, 255, 255))
+        text_rect = text_surface.get_rect()
+        text_rect.centerx = screen.get_rect().width / 4 + 60
+        text_rect.y = 60 + 20 * index
+        screen.blit(text_surface, text_rect)
+        index += 1
+
+    text_surface = font.render(u'DOUBLE', False, (255, 255, 255))
+    text_rect = text_surface.get_rect()
+    text_rect.centerx = screen.get_rect().centerx / 4 * 3
+    text_rect.y = 40
+    screen.blit(text_surface, text_rect)
+
+    sql = "select * from  user_info WHERE score <> 0 and double_flg = 1 order by score limit 10"
+    results = coonDB.query_no_args(sql)
+    index = 0
+    for row in results:
+        print(row)
+        user_id = row[0]
+        score = row[1]
+        text_surface = font.render(user_id + ":", False, (255, 255, 255))
+        text_rect = text_surface.get_rect()
+        text_rect.centerx = screen.get_rect().width / 4 * 3
+        text_rect.y = 60 + 20 * index
+        screen.blit(text_surface, text_rect)
+
+        text_surface = font.render(score, False, (255, 255, 255))
+        text_rect = text_surface.get_rect()
+        text_rect.centerx = screen.get_rect().width / 4 + 60
+        text_rect.y = 60 + 20 * index
+        screen.blit(text_surface, text_rect)
+        index += 1
+
+    pygame.display.flip()

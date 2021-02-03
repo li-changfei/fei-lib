@@ -52,6 +52,7 @@ def run_game():
 
     wait_count = 0
     invincible_count = 0
+    ranking_is_show = False
     # 开启游戏主循环
     while True:
         clock.tick(100)
@@ -87,6 +88,7 @@ def run_game():
                     tank2.rect.bottom = screen.get_rect().bottom - 20
                     tank2.y = tank2.rect.y
                     tank2.moving_image = tank2.image
+                    tank_map.set_map("double_flg", 1)
 
                 wait_count += 1
                 if wait_count == 500:
@@ -109,6 +111,10 @@ def run_game():
                 gf.update_booms(booms)
                 gf.update_screen(ai_settings, screen, tank, tank2, enemies, bullets, enemy_bullets, booms)
                 # print(len(enemy_bullets))
+            elif stats.game_step == GameStep.total:
+                if not ranking_is_show:
+                    ranking_is_show = True
+                    gf.show_ranking_list(screen)
         else:
             gf.over_image_update(screen)
 

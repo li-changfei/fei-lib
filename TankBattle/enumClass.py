@@ -24,5 +24,7 @@ class GameStep(Enum):
     ready = 2
     start = 3
     levelChange = 4
-    over = 5
-    stop = 6
+    total = 5
+    over = 6
+    stop = 7
+
