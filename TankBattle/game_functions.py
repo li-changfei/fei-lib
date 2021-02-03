@@ -9,6 +9,7 @@ from boom import Boom
 from enumClass import Direction, MapType, GameStep
 from bullet import Bullet
 from enemy import Enemy
+from register import register
 from wall import WallBrick, WallSteel, WallSeawater, WallGrassland, WallHome
 from pygame.sprite import Group
 
@@ -22,9 +23,16 @@ def check_events(ai_settings, screen, tank, tank2, bullets, stats):
             check_keydown_events(event, ai_settings, screen, tank, tank2, bullets, stats)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, tank, tank2, stats)
-        # elif event.type == pygame.MOUSEBUTTONDOWN:
-        #     if stats.game_step == GameStep.init:
-        #         stats.game_step = GameStep.ready
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            user_id = tank_map.get_map("user_id")
+            if len(user_id) == 0:
+                user_id = "defaultUser"
+                tank_map.set_map("user_id", user_id)
+            pos = pygame.mouse.get_pos()
+            if 150 < pos[0] < 360 and 300 < pos[1] < 430:
+                register(user_id)
+                if stats.game_step == GameStep.login:
+                    stats.game_step = GameStep.init
 
 
 def update_screen(ai_settings, screen, tank, tank2, enemies, bullets, enemy_bullets, booms):
@@ -356,11 +364,11 @@ def create_map(ai_settings, screen):
 
 
 def start_image_update(tank, screen):
-    button_image = pygame.image.load('images/start_image.jpg')
-    button_rect = button_image.get_rect()
-    button_rect.x = 0
-    button_rect.y = 0
-    screen.blit(button_image, button_rect)
+    start_image = pygame.image.load('images/start_image.jpg')
+    start_rect = start_image.get_rect()
+    start_rect.x = 0
+    start_rect.y = 0
+    screen.blit(start_image, start_rect)
 
     tank.moving_image = pygame.transform.rotate(tank.image, 270)
     tank.update()
@@ -369,50 +377,65 @@ def start_image_update(tank, screen):
 
 
 def over_image_update(screen):
-    button_image = pygame.image.load('images/game_over.png').convert()
-    button_image.set_alpha(10)
-    button_image = pygame.transform.scale(button_image, (screen.get_rect().width, screen.get_rect().height))
-    button_rect = button_image.get_rect()
-    button_rect.x = 0
-    button_rect.y = 0
-    screen.blit(button_image, button_rect)
+    over_image = pygame.image.load('images/game_over.png').convert()
+    over_image.set_alpha(10)
+    over_image = pygame.transform.scale(over_image, (screen.get_rect().width, screen.get_rect().height))
+    over_rect = over_image.get_rect()
+    over_rect.x = 0
+    over_rect.y = 0
+    screen.blit(over_image, over_rect)
 
     pygame.display.flip()
 
 
 def login(screen, count, user_id):
-    location = (100, 150, 200, 250, 300)
     # 创建一个Font对象
-    font = pygame.font.SysFont("arial", 36)
-    font.set_bold(True)
+    font = pygame.font.SysFont("arial", 20)
     index = 0
+
     for index_str in user_id:
-        index += 1
+        rect = pygame.Rect(100 + 20 * index, 100, 20, 20)
+        pygame.draw.rect(screen, (0, 0, 0), rect)
+
         text_user_id = font.render(index_str, False, (255, 255, 255))
         text_rect = text_user_id.get_rect()
-        text_rect.x = location(index)
+        text_rect.x = 100 + 20 * index
         text_rect.y = 100
+        index += 1
 
         screen.blit(text_user_id, text_rect)
-    rect = pygame.Rect(0, 0, 20, 20)
-    rect.x = 100 + 50 * index
-    rect.y = 100
+
+    rect = pygame.Rect(100 + 20 * index, 100, 20, 20)
     if (count % 100) > 50:
         pygame.draw.rect(screen, (60, 60, 60), rect)
     else:
         pygame.draw.rect(screen, (0, 0, 0), rect)
 
+    font = pygame.font.SysFont("arial", 36)
     text_surface = font.render(u'Please enter your user ', False, (255, 255, 255))
     text_rect = text_surface.get_rect()
     text_rect.centerx = screen.get_rect().centerx
     text_rect.centery = screen.get_rect().centery
     screen.blit(text_surface, text_rect)
+
+    start_button = pygame.image.load('images/start_button.png').convert()
+    # start_button.set_alpha(10)
+    button_rect = start_button.get_rect()
+    button_rect.centerx = screen.get_rect().centerx
+    button_rect.centery = screen.get_rect().centery + 100
+
+    rect = pygame.Rect(0, 0, button_rect.width + 4, button_rect.height + 4)
+    rect.centerx = button_rect.centerx
+    rect.centery = button_rect.centery
+    pygame.draw.rect(screen, (255, 255, 255), rect)
+    screen.blit(start_button, button_rect)
     pygame.display.flip()
 
 
 def input_text(value):
     user_id = tank_map.get_map("user_id")
-    user_id = user_id + str(value)
-    tank_map.set_map("user_id", user_id)
+    if len(user_id) <= 15:
+        user_id = user_id + str(value)
+        tank_map.set_map("user_id", user_id)
 
 

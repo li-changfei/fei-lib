@@ -59,8 +59,8 @@ def run_game():
         if stats.game_active:
             if stats.game_step == GameStep.login:
                 wait_count += 1
-
-                gf.login(screen, wait_count, tank_map.get_map("user_id"))
+                user_id = tank_map.get_map("user_id")
+                gf.login(screen, wait_count, user_id)
                 if wait_count > 100:
                     wait_count = 0
             elif stats.game_step == GameStep.init:
