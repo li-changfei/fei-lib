@@ -90,7 +90,7 @@ def update_screen(ai_settings, screen, tank, tank2, enemies, bullets, enemy_bull
     user_id = tank_map.get_map("user_id")
     text_user_id = font.render(user_id, False, (255, 255, 255))
     text_rect = text_user_id.get_rect()
-    text_rect.x = 120
+    text_rect.x = 80
     text_rect.y = area_y
 
     text_score_lbl = font.render("Score :", False, (255, 255, 255))
@@ -117,12 +117,21 @@ def check_keydown_events(event, ai_settings, screen, tank, tank2, bullets, stats
     if stats.game_step == GameStep.login:
         key = event.key
         unicode = event.unicode
-
-        if unicode != "":
-            char = unicode
-        else:
-            char = chr(key)
-        input_text(char)
+        # print(key)
+        # 只有
+        if pygame.K_0 <= key <= pygame.K_9 or pygame.K_a <= key <= pygame.K_z:
+            if unicode != "":
+                char = unicode
+            else:
+                char = chr(key)
+            input_text(char)
+        elif key == pygame.K_BACKSPACE:
+            user_id = tank_map.get_map("user_id")
+            print(user_id)
+            print(type(user_id))
+            print(user_id[0: -1])
+            user_id = user_id[0: -1]
+            tank_map.set_map("user_id", user_id)
     elif stats.game_step == GameStep.init:
         if event.key == pygame.K_UP:
             if tank.y == 280:
@@ -461,10 +470,10 @@ def login(screen, count, user_id):
     font = pygame.font.SysFont("arial", 20)
     index = 0
 
-    for index_str in user_id:
-        rect = pygame.Rect(100 + 20 * index, 100, 20, 20)
+    for i in range(15):
+        rect = pygame.Rect(100 + 20 * i, 100, 20, 20)
         pygame.draw.rect(screen, (0, 0, 0), rect)
-
+    for index_str in user_id:
         text_user_id = font.render(index_str, False, (255, 255, 255))
         text_rect = text_user_id.get_rect()
         text_rect.x = 100 + 20 * index
@@ -486,6 +495,7 @@ def login(screen, count, user_id):
     text_rect.centery = screen.get_rect().centery
     screen.blit(text_surface, text_rect)
 
+    # 图片周围显示白边
     start_button = pygame.image.load('images/start_button.png').convert()
     # start_button.set_alpha(10)
     button_rect = start_button.get_rect()
@@ -531,7 +541,7 @@ def show_ranking_list(screen):
     text_surface = font.render(u'SOLO', False, (255, 255, 255))
     text_rect = text_surface.get_rect()
     text_rect.centerx = screen.get_rect().width / 4
-    text_rect.y = 40
+    text_rect.y = 80
     screen.blit(text_surface, text_rect)
 
     sql = "select * from  user_info WHERE score <> 0 and double_flg = 0 order by score limit 10"
@@ -556,8 +566,8 @@ def show_ranking_list(screen):
 
     text_surface = font.render(u'DOUBLE', False, (255, 255, 255))
     text_rect = text_surface.get_rect()
-    text_rect.centerx = screen.get_rect().centerx / 4 * 3
-    text_rect.y = 40
+    text_rect.centerx = screen.get_rect().width / 4 * 3
+    text_rect.y = 80
     screen.blit(text_surface, text_rect)
 
     sql = "select * from  user_info WHERE score <> 0 and double_flg = 1 order by score limit 10"

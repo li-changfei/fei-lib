@@ -70,6 +70,7 @@ def run_game():
                 wait_count = 0
                 gf.start_image_update(tank, screen)
             elif stats.game_step == GameStep.ready:
+                # 关卡信息显示
                 wait_count += 1
                 text_surface = font.render(u'level {0}'.format(stats.level), False, ai_settings.failed_color)
                 text_rect = text_surface.get_rect()
@@ -82,6 +83,7 @@ def run_game():
                     wait_count = 0
                     stats.game_step = GameStep.start
             elif stats.game_step == GameStep.start:
+                # 显示第二个英雄
                 if ai_settings.has_tank2 and tank2 is None:
                     tank2 = Tank(ai_settings, screen, 2)
                     tank2.x = 300
@@ -91,10 +93,13 @@ def run_game():
                     tank_map.set_map("double_flg", 1)
 
                 wait_count += 1
+                # 每隔500，刷出敌人
                 if wait_count == 500:
                     wait_count = 0
                     if len(enemies) < ai_settings.enemies_allowed:
                         gf.create_fleet(ai_settings, screen, enemies)
+
+                # 无敌的计算
                 if tank.is_invincible or (tank2 is not None and tank2.is_invincible):
                     invincible_count += 1
                 if invincible_count == 400:
@@ -102,16 +107,21 @@ def run_game():
                     tank.is_invincible = False
                     if tank2 is not None:
                         tank2.is_invincible = False
+
+                # 刷新英雄坦克位置
                 tank.update()
                 if tank2 is not None:
                     tank2.update()
                 # enemy.upadte(bullets)
+
+                # 其他显示精灵刷新
                 gf.update_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, screen, stats, booms)
                 gf.update_enemies(enemies, enemy_bullets)
                 gf.update_booms(booms)
                 gf.update_screen(ai_settings, screen, tank, tank2, enemies, bullets, enemy_bullets, booms)
                 # print(len(enemy_bullets))
             elif stats.game_step == GameStep.total:
+                # 显示排行榜
                 if not ranking_is_show:
                     ranking_is_show = True
                     gf.show_ranking_list(screen)
