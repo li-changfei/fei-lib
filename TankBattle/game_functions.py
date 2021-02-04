@@ -28,14 +28,22 @@ def check_events(ai_settings, screen, tank, tank2, bullets, stats):
             check_keyup_events(event, tank, tank2, stats)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
-            if 150 < pos[0] < 360 and 300 < pos[1] < 430:
-                user_id = tank_map.get_map("user_id")
-                if len(user_id) == 0:
-                    user_id = "defaultUser"
-                    tank_map.set_map("user_id", user_id)
-                register(user_id)
-                if stats.game_step == GameStep.login:
+            if stats.game_step == GameStep.login:
+                if 150 < pos[0] < 360 and 300 < pos[1] < 430:
+                    user_id = tank_map.get_map("user_id")
+                    if len(user_id) == 0:
+                        user_id = "defaultUser"
+                        tank_map.set_map("user_id", user_id)
+                    register(user_id)
+                    if stats.game_step == GameStep.login:
+                        stats.game_step = GameStep.init
+            elif stats.game_step == GameStep.total:
+                if 40 < pos[0] < 220 and 440 < pos[1] < 490:
+                    tank.x = 120
+                    tank.y = 280
                     stats.game_step = GameStep.init
+                elif 300 < pos[0] < 480 and 440 < pos[1] < 490:
+                    stats.game_active = False
 
 
 def update_screen(ai_settings, screen, tank, tank2, enemies, bullets, enemy_bullets, booms):
@@ -518,9 +526,17 @@ def input_text(value):
 
 
 def update_score():
-    sql = "update user_info set score = %s where user_id = %s and double_flg = %s"
-    args = (tank_map.get_map("score"), tank_map.get_map("user_id"), tank_map.get_map("double_flg"))
-    update(sql, args)
+    sql = "select * from  user_info WHERE user_id = %s and double_flg = %s"
+    args = (tank_map.get_map("user_id"), tank_map.get_map("double_flg"))
+    results = coonDB.query(sql, args)
+    score = 0
+    for row in results:
+        score = row[1]
+
+    if score < tank_map.get_map("score"):
+        sql = "update user_info set score = %s where user_id = %s and double_flg = %s"
+        args = (tank_map.get_map("score"), tank_map.get_map("user_id"), tank_map.get_map("double_flg"))
+        update(sql, args)
 
 
 def show_ranking_list(screen):
@@ -544,25 +560,25 @@ def show_ranking_list(screen):
     text_rect.y = 80
     screen.blit(text_surface, text_rect)
 
-    sql = "select * from  user_info WHERE score <> 0 and double_flg = 0 order by score limit 10"
+    sql = "select * from  user_info WHERE score <> 0 and double_flg = 0 order by score desc limit 10"
     results = coonDB.query_no_args(sql)
     index = 0
     for row in results:
+        index += 1
         print(row)
         user_id = row[0]
         score = row[1]
-        text_surface = font.render(user_id + ":", False, (255, 255, 255))
+        text_surface = font.render(user_id + "    :", False, (255, 255, 255))
         text_rect = text_surface.get_rect()
-        text_rect.centerx = screen.get_rect().width / 4
-        text_rect.y = 60 + 20 * index
+        text_rect.right = screen.get_rect().width / 4
+        text_rect.y = 90 + 20 * index
         screen.blit(text_surface, text_rect)
 
-        text_surface = font.render(score, False, (255, 255, 255))
+        text_surface = font.render(str(score), False, (255, 255, 255))
         text_rect = text_surface.get_rect()
-        text_rect.centerx = screen.get_rect().width / 4 + 60
-        text_rect.y = 60 + 20 * index
+        text_rect.left = screen.get_rect().width / 4 + 20
+        text_rect.y = 90 + 20 * index
         screen.blit(text_surface, text_rect)
-        index += 1
 
     text_surface = font.render(u'DOUBLE', False, (255, 255, 255))
     text_rect = text_surface.get_rect()
@@ -570,24 +586,37 @@ def show_ranking_list(screen):
     text_rect.y = 80
     screen.blit(text_surface, text_rect)
 
-    sql = "select * from  user_info WHERE score <> 0 and double_flg = 1 order by score limit 10"
+    sql = "select * from  user_info WHERE score <> 0 and double_flg = 1 order by score desc limit 10"
     results = coonDB.query_no_args(sql)
     index = 0
     for row in results:
+        index += 1
         print(row)
         user_id = row[0]
         score = row[1]
-        text_surface = font.render(user_id + ":", False, (255, 255, 255))
+        text_surface = font.render(user_id + "    :", False, (255, 255, 255))
         text_rect = text_surface.get_rect()
-        text_rect.centerx = screen.get_rect().width / 4 * 3
-        text_rect.y = 60 + 20 * index
+        text_rect.right = screen.get_rect().width / 4 * 3
+        text_rect.y = 90 + 20 * index
         screen.blit(text_surface, text_rect)
 
-        text_surface = font.render(score, False, (255, 255, 255))
+        text_surface = font.render(str(score), False, (255, 255, 255))
         text_rect = text_surface.get_rect()
-        text_rect.centerx = screen.get_rect().width / 4 + 60
-        text_rect.y = 60 + 20 * index
+        text_rect.left = screen.get_rect().width / 4 * 3 + 20
+        text_rect.y = 90 + 20 * index
         screen.blit(text_surface, text_rect)
-        index += 1
+    # 按钮图片加载
+    try_again_button = pygame.image.load('images/btn_try_again.png').convert()
+    try_again_button = pygame.transform.scale(try_again_button, (180, 50))
+    button_rect = try_again_button.get_rect()
+    button_rect.x = 40
+    button_rect.y = screen.get_rect().bottom - 100
+    screen.blit(try_again_button, button_rect)
 
+    end_button = pygame.image.load('images/btn_game_over.png').convert()
+    end_button = pygame.transform.scale(end_button, (180, 50))
+    button_rect = end_button.get_rect()
+    button_rect.right = screen.get_rect().width - 40
+    button_rect.y = screen.get_rect().bottom - 100
+    screen.blit(end_button, button_rect)
     pygame.display.flip()
