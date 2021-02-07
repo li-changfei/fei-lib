@@ -39,9 +39,12 @@ def check_events(ai_settings, screen, tank, tank2, bullets, stats):
                         stats.game_step = GameStep.init
             elif stats.game_step == GameStep.total:
                 if 40 < pos[0] < 220 and 440 < pos[1] < 490:
+                    stats.game_step = GameStep.init
+                    init_tank(tank, 0, screen)
                     tank.x = 120
                     tank.y = 280
-                    stats.game_step = GameStep.init
+                    if tank2 is not None:
+                        init_tank(tank2, 1, screen)
                 elif 300 < pos[0] < 480 and 440 < pos[1] < 490:
                     stats.game_active = False
 
@@ -152,6 +155,8 @@ def check_keydown_events(event, ai_settings, screen, tank, tank2, bullets, stats
         elif event.key == pygame.K_SPACE:
             if tank.y > 280:
                 ai_settings.has_tank2 = True
+            else:
+                ai_settings.has_tank2 = False
             tank.x = 180
             tank.rect.bottom = screen.get_rect().bottom - 20
             tank.y = tank.rect.y
@@ -196,29 +201,37 @@ def check_keyup_events(event, tank, tank2, stats):
     if stats.game_step == GameStep.start:
         if event.key == pygame.K_RIGHT:
             tank.moving_right = False
-            tank.direction_priority.remove(Direction.right)
+            if Direction.right in tank.direction_priority:
+                tank.direction_priority.remove(Direction.right)
         elif event.key == pygame.K_LEFT:
             tank.moving_left = False
-            tank.direction_priority.remove(Direction.left)
+            if Direction.left in tank.direction_priority:
+                tank.direction_priority.remove(Direction.left)
         if event.key == pygame.K_UP:
             tank.moving_up = False
-            tank.direction_priority.remove(Direction.up)
+            if Direction.up in tank.direction_priority:
+                tank.direction_priority.remove(Direction.up)
         elif event.key == pygame.K_DOWN:
             tank.moving_down = False
-            tank.direction_priority.remove(Direction.down)
+            if Direction.down in tank.direction_priority:
+                tank.direction_priority.remove(Direction.down)
         if tank2 is not None:
             if event.key == pygame.K_d:
                 tank2.moving_right = False
-                tank2.direction_priority.remove(Direction.right)
+                if Direction.right in tank2.direction_priority:
+                    tank2.direction_priority.remove(Direction.right)
             elif event.key == pygame.K_a:
                 tank2.moving_left = False
-                tank2.direction_priority.remove(Direction.left)
+                if Direction.left in tank2.direction_priority:
+                    tank2.direction_priority.remove(Direction.left)
             elif event.key == pygame.K_w:
                 tank2.moving_up = False
-                tank2.direction_priority.remove(Direction.up)
+                if Direction.up in tank2.direction_priority:
+                    tank2.direction_priority.remove(Direction.up)
             elif event.key == pygame.K_s:
                 tank2.moving_down = False
-                tank2.direction_priority.remove(Direction.down)
+                if Direction.down in tank2.direction_priority:
+                    tank2.direction_priority.remove(Direction.down)
 
 
 def update_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, screen, stats, booms):
@@ -289,7 +302,7 @@ def delete_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, sc
     #     print(collisions)
     for bullet, kill_enemies in collisions.items():
         score = tank_map.get_map("score")
-        score += 100
+        score += 100 * stats.level
         tank_map.set_map("score", score)
         bullet.owner.bullet_count -= 1
         # 显示爆炸
@@ -298,8 +311,11 @@ def delete_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, sc
             enemies.remove(enemy)
             ai_settings.enemies_allowed -= 1
         if ai_settings.enemies_allowed == 0:
-            update_score()
-            stats.game_step = GameStep.total
+            bullets.empty()
+            enemy_bullets.empty()
+            booms.empty()
+            stats.game_step = GameStep.levelChange
+            ai_settings.enemies_allowed = ai_settings.enemies_all * stats.level
 
     # 子弹打到砖墙时动作
     bricks = tank_map.get_map(MapType.brick.name)
@@ -331,22 +347,17 @@ def delete_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, sc
         score = tank_map.get_map("score")
         score -= 200
         tank_map.set_map("score", score)
-        tank.x = 180
-        tank.rect.bottom = screen.get_rect().bottom - 20
-        tank.y = tank.rect.y
-        tank.moving_image = tank.image
-        tank.is_invincible = True
+        init_tank(tank, 0, screen)
+        # tank.is_invincible = True
+
     if tank2 is not None:
         collisions = pygame.sprite.spritecollide(tank2, enemy_bullets, True)
         if len(collisions) > 0 and not tank2.is_invincible:
             score = tank_map.get_map("score")
             score -= 200
             tank_map.set_map("score", score)
-            tank2.x = 300
-            tank2.rect.bottom = screen.get_rect().bottom - 20
-            tank2.y = tank.rect.y
-            tank2.moving_image = tank.image
-            tank2.is_invincible = True
+            init_tank(tank2, 1, screen)
+
     # 老家被打到
     home = tank_map.get_map(MapType.home.name)
     collisions = pygame.sprite.spritecollide(home, enemy_bullets, True)
@@ -354,11 +365,18 @@ def delete_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, sc
         WallHome.break_home(home)
         update_score()
         stats.game_step = GameStep.total
+        bullets.empty()
+        enemy_bullets.empty()
+        booms.empty()
     collisions = pygame.sprite.spritecollide(home, bullets, True)
     if len(collisions) > 0:
         WallHome.break_home(home)
         update_score()
         stats.game_step = GameStep.total
+        bullets.empty()
+        enemy_bullets.empty()
+        booms.empty()
+
 
 
 def show_boom(ai_settings, screen, booms, x, y):
@@ -392,8 +410,8 @@ def create_fleet(ai_settings, screen, enemies):
         enemies.add(enemy)
 
 
-def update_enemies(enemies, enemy_bullets):
-    enemies.update(enemy_bullets)
+def update_enemies(enemies, enemy_bullets, stats):
+    enemies.update(enemy_bullets, stats)
 
 
 def update_booms(booms):
@@ -620,3 +638,35 @@ def show_ranking_list(screen):
     button_rect.y = screen.get_rect().bottom - 100
     screen.blit(end_button, button_rect)
     pygame.display.flip()
+
+
+def init_tank(tank, tank_flg, screen):
+    # 移动标志
+    tank.moving_right = False
+    tank.moving_left = False
+    tank.moving_up = False
+    tank.moving_down = False
+    # 坦克运行的方向
+    tank.direction = Direction.up
+    # 坦克移动方向优先度
+    tank.direction_priority = []
+    # 是不是无敌
+    tank.is_invincible = True
+
+    tank.rect.bottom = screen.get_rect().bottom - 20
+    tank.y = tank.rect.y
+    tank.moving_image = tank.image
+
+    if tank_flg == 0:
+        tank.x = 180
+    else:
+        tank.x = 300
+        tank_map.set_map("double_flg", 1)
+
+
+def init_home(ai_settings, screen):
+    # 创建一个砖墙编组
+    create_map(ai_settings, screen)
+
+    home = tank_map.get_map(MapType.home.name)
+    WallHome.normal_home(home)

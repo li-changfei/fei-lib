@@ -43,18 +43,18 @@ class Enemy(Sprite):
         self.screen.blit(self.moving_image, self.rect)
 
     # def upadte(self, bullets):
-    def update(self, enemy_bullets):
+    def update(self, enemy_bullets, stats):
         """持续运动"""
         if self.need_transform():
             self.transform()
         if self.moving_right:
-            self.x += self.ai_settings.tank_speed_factor
+            self.x += self.ai_settings.tank_speed_factor * stats.level
         if self.moving_left:
-            self.x -= self.ai_settings.tank_speed_factor
+            self.x -= self.ai_settings.tank_speed_factor * stats.level
         if self.moving_up:
-            self.y -= self.ai_settings.tank_speed_factor
+            self.y -= self.ai_settings.tank_speed_factor * stats.level
         if self.moving_down:
-            self.y += self.ai_settings.tank_speed_factor
+            self.y += self.ai_settings.tank_speed_factor * stats.level
 
         # 根据self.center更新rect对象
         self.rect.x = self.x

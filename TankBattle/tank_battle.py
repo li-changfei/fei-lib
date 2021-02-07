@@ -69,7 +69,9 @@ def run_game():
             elif stats.game_step == GameStep.init:
                 wait_count = 0
                 gf.start_image_update(tank, screen)
+
             elif stats.game_step == GameStep.ready:
+                gf.init_home(ai_settings, screen)
                 # 关卡信息显示
                 wait_count += 1
                 text_surface = font.render(u'level {0}'.format(stats.level), False, ai_settings.failed_color)
@@ -83,6 +85,7 @@ def run_game():
                     wait_count = 0
                     stats.game_step = GameStep.start
             elif stats.game_step == GameStep.start:
+                ranking_is_show = False
                 # 显示第二个英雄
                 if ai_settings.has_tank2 and tank2 is None:
                     tank2 = Tank(ai_settings, screen, 2)
@@ -91,6 +94,8 @@ def run_game():
                     tank2.y = tank2.rect.y
                     tank2.moving_image = tank2.image
                     tank_map.set_map("double_flg", 1)
+                if not ai_settings.has_tank2:
+                    tank2 = None
 
                 wait_count += 1
                 # 每隔500，刷出敌人
@@ -116,10 +121,20 @@ def run_game():
 
                 # 其他显示精灵刷新
                 gf.update_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, screen, stats, booms)
-                gf.update_enemies(enemies, enemy_bullets)
+                gf.update_enemies(enemies, enemy_bullets, stats)
                 gf.update_booms(booms)
                 gf.update_screen(ai_settings, screen, tank, tank2, enemies, bullets, enemy_bullets, booms)
                 # print(len(enemy_bullets))
+            elif stats.game_step == GameStep.levelChange:
+                wait_count = 0
+                stats.level += 1
+                tank.x = 120
+                tank.y = 280
+                stats.game_step = GameStep.init
+                gf.init_tank(tank, 0, screen)
+                if tank2 is not None:
+                    gf.init_tank(tank2, 1, screen)
+                stats.game_step = GameStep.ready
             elif stats.game_step == GameStep.total:
                 # 显示排行榜
                 if not ranking_is_show:
