@@ -525,6 +525,12 @@ def login(screen, count, user_id):
     text_rect.centery = screen.get_rect().centery
     screen.blit(text_surface, text_rect)
 
+    font = pygame.font.SysFont("arial", 16)
+    text_surface = font.render(u'(Less than ten characters)', False, (255, 255, 255))
+    text_rect = text_surface.get_rect()
+    text_rect.centerx = screen.get_rect().centerx
+    text_rect.centery = screen.get_rect().centery + 30
+    screen.blit(text_surface, text_rect)
     # 图片周围显示白边
     start_button = pygame.image.load('images/start_button.png').convert()
     # start_button.set_alpha(10)
@@ -542,7 +548,7 @@ def login(screen, count, user_id):
 
 def input_text(value):
     user_id = tank_map.get_map("user_id")
-    if len(user_id) <= 15:
+    if len(user_id) < 10:
         user_id = user_id + str(value)
         tank_map.set_map("user_id", user_id)
 
@@ -590,7 +596,7 @@ def show_ranking_list(screen):
         print(row)
         user_id = row[0]
         score = row[1]
-        text_surface = font.render(user_id + "    :", False, (255, 255, 255))
+        text_surface = font.render(user_id + "   :", False, (255, 255, 255))
         text_rect = text_surface.get_rect()
         text_rect.right = screen.get_rect().width / 4
         text_rect.y = 90 + 20 * index
@@ -598,7 +604,7 @@ def show_ranking_list(screen):
 
         text_surface = font.render(str(score), False, (255, 255, 255))
         text_rect = text_surface.get_rect()
-        text_rect.left = screen.get_rect().width / 4 + 20
+        text_rect.left = screen.get_rect().width / 4 + 15
         text_rect.y = 90 + 20 * index
         screen.blit(text_surface, text_rect)
 
@@ -616,7 +622,7 @@ def show_ranking_list(screen):
         print(row)
         user_id = row[0]
         score = row[1]
-        text_surface = font.render(user_id + "    :", False, (255, 255, 255))
+        text_surface = font.render(user_id + "   :", False, (255, 255, 255))
         text_rect = text_surface.get_rect()
         text_rect.right = screen.get_rect().width / 4 * 3
         text_rect.y = 90 + 20 * index
@@ -624,7 +630,7 @@ def show_ranking_list(screen):
 
         text_surface = font.render(str(score), False, (255, 255, 255))
         text_rect = text_surface.get_rect()
-        text_rect.left = screen.get_rect().width / 4 * 3 + 20
+        text_rect.left = screen.get_rect().width / 4 * 3 + 15
         text_rect.y = 90 + 20 * index
         screen.blit(text_surface, text_rect)
     # 按钮图片加载
