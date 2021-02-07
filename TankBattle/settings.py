@@ -19,7 +19,7 @@ class Settings():
         self.bullet_height_v = 3
         self.bullet_color = 60, 60, 60
         self.bullets_allowed = 3
-        self.enemies_all = 8
+        self.enemies_all = 2
         self.enemies_allowed = self.enemies_all
         self.enemy_transform = 0
         self.map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

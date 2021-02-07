@@ -34,8 +34,6 @@ def run_game():
     enemies = Group()
     # 创建一个敌人
     # enemy = Enemy(ai_settings, screen)
-    # 创建外敌人群
-    gf.create_fleet(ai_settings, screen, enemies)
 
     # 创建一个砖墙编组
     gf.create_map(ai_settings, screen)
@@ -68,6 +66,11 @@ def run_game():
                     wait_count = 0
             elif stats.game_step == GameStep.init:
                 wait_count = 0
+                bullets.empty()
+                enemy_bullets.empty()
+                booms.empty()
+                enemies.empty()
+                ai_settings.enemies_allowed = ai_settings.enemies_all
                 gf.start_image_update(tank, screen)
 
             elif stats.game_step == GameStep.ready:
@@ -84,6 +87,9 @@ def run_game():
                 if wait_count == 100:
                     wait_count = 0
                     stats.game_step = GameStep.start
+                    # 创建外敌人群
+                    if len(enemies) < ai_settings.enemies_allowed:
+                        gf.create_fleet(ai_settings, screen, enemies)
             elif stats.game_step == GameStep.start:
                 ranking_is_show = False
                 # 显示第二个英雄
@@ -132,9 +138,12 @@ def run_game():
                 tank.y = 280
                 stats.game_step = GameStep.init
                 gf.init_tank(tank, 0, screen)
+                ai_settings.enemies_allowed = ai_settings.enemies_all * stats.level
                 if tank2 is not None:
                     gf.init_tank(tank2, 1, screen)
                 stats.game_step = GameStep.ready
+                wait_count = 0
+
             elif stats.game_step == GameStep.total:
                 # 显示排行榜
                 if not ranking_is_show:

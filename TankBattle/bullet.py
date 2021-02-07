@@ -56,29 +56,41 @@ class Bullet(Sprite):
         self.direction = tank.direction
         self.owner = None
 
-    def update(self):
+    def update(self, stats, enemy_flg):
         if self.direction == Direction.up:
             """向上移动子弹"""
             # 更新表示子弹位置的小数值
-            self.y -= self.speed_factor
+            if enemy_flg:
+                self.y -= self.speed_factor * stats.level
+            else:
+                self.y -= self.speed_factor
             # 更新表示子弹的rect的位置
             self.rect.y = self.y
         elif self.direction == Direction.right:
             """向右移动子弹"""
             # 更新表示子弹位置的小数值
-            self.x += self.speed_factor
+            if enemy_flg:
+                self.x += self.speed_factor * stats.level
+            else:
+                self.x += self.speed_factor
             # 更新表示子弹的rect的位置
             self.rect.x = self.x
         elif self.direction == Direction.left:
             """向左移动子弹"""
             # 更新表示子弹位置的小数值
-            self.x -= self.speed_factor
+            if enemy_flg:
+                self.x -= self.speed_factor * stats.level
+            else:
+                self.x -= self.speed_factor
             # 更新表示子弹的rect的位置
             self.rect.x = self.x
         elif self.direction == Direction.down:
             """向下移动子弹"""
             # 更新表示子弹位置的小数值
-            self.y += self.speed_factor
+            if enemy_flg:
+                self.y += self.speed_factor * stats.level
+            else:
+                self.y += self.speed_factor
             # 更新表示子弹的rect的位置
             self.rect.y = self.y
 

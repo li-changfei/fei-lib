@@ -45,7 +45,7 @@ class Enemy(Sprite):
     # def upadte(self, bullets):
     def update(self, enemy_bullets, stats):
         """持续运动"""
-        if self.need_transform():
+        if self.need_transform(stats):
             self.transform()
         if self.moving_right:
             self.x += self.ai_settings.tank_speed_factor * stats.level
@@ -127,7 +127,7 @@ class Enemy(Sprite):
             self.moving_up = False
             self.moving_down = True
 
-    def need_transform(self):
+    def need_transform(self, stats):
         if self.moving_right and self.rect.right >= self.screen_rect.right:
             return True
         if self.moving_left and self.rect.left <= 0:
@@ -146,24 +146,24 @@ class Enemy(Sprite):
                 return True
         collisions = pygame.sprite.spritecollide(self, tank_map.get_map(MapType.brick.name), False)
         if len(collisions) > 0:
-            self.back_for_collide()
+            self.back_for_collide(stats)
             return True
         collisions = pygame.sprite.spritecollide(self, tank_map.get_map(MapType.steel.name), False)
         if len(collisions) > 0:
-            self.back_for_collide()
+            self.back_for_collide(stats)
             return True
         collisions = pygame.sprite.spritecollide(self, tank_map.get_map(MapType.seawater.name), False)
         if len(collisions) > 0:
-            self.back_for_collide()
+            self.back_for_collide(stats)
             return True
         return False
 
-    def back_for_collide(self):
+    def back_for_collide(self, stats):
         if self.moving_right:
-            self.x -= self.ai_settings.tank_speed_factor
+            self.x -= self.ai_settings.tank_speed_factor * stats.level
         if self.moving_left:
-            self.x += self.ai_settings.tank_speed_factor
+            self.x += self.ai_settings.tank_speed_factor * stats.level
         if self.moving_up:
-            self.y += self.ai_settings.tank_speed_factor
+            self.y += self.ai_settings.tank_speed_factor * stats.level
         if self.moving_down:
-            self.y -= self.ai_settings.tank_speed_factor
+            self.y -= self.ai_settings.tank_speed_factor * stats.level

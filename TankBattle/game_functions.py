@@ -40,6 +40,11 @@ def check_events(ai_settings, screen, tank, tank2, bullets, stats):
             elif stats.game_step == GameStep.total:
                 if 40 < pos[0] < 220 and 440 < pos[1] < 490:
                     stats.game_step = GameStep.init
+                    stats.level = 1
+                    score = tank_map.get_map("score")
+                    score = 0
+                    tank_map.set_map("score", score)
+
                     init_tank(tank, 0, screen)
                     tank.x = 120
                     tank.y = 280
@@ -237,8 +242,8 @@ def check_keyup_events(event, tank, tank2, stats):
 def update_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, screen, stats, booms):
     """更新子弹的位置，并删除已消失的子弹"""
     # 更新子弹的位置
-    bullets.update()
-    enemy_bullets.update()
+    bullets.update(stats, False)
+    enemy_bullets.update(stats, True)
 
     # 删除子弹
     delete_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, screen, stats, booms)
@@ -315,7 +320,6 @@ def delete_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, sc
             enemy_bullets.empty()
             booms.empty()
             stats.game_step = GameStep.levelChange
-            ai_settings.enemies_allowed = ai_settings.enemies_all * stats.level
 
     # 子弹打到砖墙时动作
     bricks = tank_map.get_map(MapType.brick.name)
@@ -652,7 +656,7 @@ def init_tank(tank, tank_flg, screen):
     tank.direction_priority = []
     # 是不是无敌
     tank.is_invincible = True
-
+    tank.bullet_count = 0
     tank.rect.bottom = screen.get_rect().bottom - 20
     tank.y = tank.rect.y
     tank.moving_image = tank.image
