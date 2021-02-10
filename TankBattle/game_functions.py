@@ -2,7 +2,7 @@ import sys
 
 import numpy
 import pygame
-
+import threading
 import random
 
 import coonDB
@@ -34,7 +34,8 @@ def check_events(ai_settings, screen, tank, tank2, bullets, stats):
                     if len(user_id) == 0:
                         user_id = "defaultUser"
                         tank_map.set_map("user_id", user_id)
-                    register(user_id)
+                    run_register(user_id)
+                    # register(user_id)
                     if stats.game_step == GameStep.login:
                         stats.game_step = GameStep.init
             elif stats.game_step == GameStep.total:
@@ -382,7 +383,6 @@ def delete_bullets(ai_settings, enemies, tank, tank2, bullets, enemy_bullets, sc
         booms.empty()
 
 
-
 def show_boom(ai_settings, screen, booms, x, y):
     new_boom = Boom(ai_settings, screen)
     new_boom.centerx = x
@@ -680,3 +680,9 @@ def init_home(ai_settings, screen):
 
     home = tank_map.get_map(MapType.home.name)
     WallHome.normal_home(home)
+
+
+def run_register(user_id):
+    t = threading.Thread(target=register, args=(user_id,))
+    t.start()
+

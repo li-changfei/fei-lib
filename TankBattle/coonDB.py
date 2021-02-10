@@ -1,10 +1,15 @@
 import MySQLdb
+import importlib
+
+from dbutils.pooled_db import PooledDB
 
 
 def get_conn():
-    db = MySQLdb.connect(host="database-tank1.c9103kdqidvw.ap-northeast-1.rds.amazonaws.com", port=3306, user="admin",
-                         password="123456a?", db="tank_battle")
-    return db
+    conn = MySQLdb.connect(host="database-tank1.c9103kdqidvw.ap-northeast-1.rds.amazonaws.com", port=3306, user="admin",
+                           password="123456a?", db="tank_battle")
+    # pool = PooledDB(MySQLdb, 3, host="database-tank1.c9103kdqidvw.ap-northeast-1.rds.amazonaws.com", user="admin", passwd="123456a?", db="tank_battle",
+    #                 port=3306, charset="utf8", use_unicode=True)
+    return conn
 
 
 def insert(sql, args):
