@@ -1,0 +1,127 @@
+﻿★Question 6
+Your Amazon EC2 instances must access the AWS API, so you created a NAT gateway in an existing subnet.
+When you try to access the AWS API, you are unsuccessful. 
+What could be preventing access?
+您的Amazon EC2实例必须访问AWS API，因此您在一个现有子网中创建了一个NAT网关。
+当您尝试访问AWS API时，您将失败。
+是什么阻止了访问?
+
+A. The NAT gateway subnet does not have a route to an Internet gateway. 到internet没有路由
+B. The instances need an IAM granting access to the NAT gateway.  没有权限
+C. The NAT gateway does not have a route to the virtual private gateway. 到私有子网没有的路由
+D. The instances are not in the same subnet as the NAT gateway.
+Answer: NAT gateway 需要放到共有子网、弹性ip地址、路由表
+
+★Question 25
+Which security functions are based on AWS STS? (Select TWO.)
+哪些安全功能是基于AWS STS的?(选择两个。)
+A. Using IAM roles with Amazon EC2 instances
+B. Adding conditions to managed policies
+C. Using access keys to authenticate IAM users
+D. Using web federated identity to authenticate users
+E. Assigning managed policies to IAM groups
+Answer:AD
+问题：STS定义
+
+★Question 27
+Your organization is looking for a solution that can help the business with streaming data. Several
+services will require access to read and process the same stream concurrently.
+What AWS service meets the business requirements?
+您的组织正在寻找一种解决方案，以帮助企业处理流数据。
+多个服务将需要访问来同时读取和处理同一个流。
+什么AWS服务满足业务需求?
+A. Amazon Kinesis Firehose
+B. Amazon Kinesis Streams
+C. Amazon CloudFront
+D. Amazon SQS
+Answer:B
+streaming（流）  →  A、B（Kinesis 流服务）
+
+★Question 28
+A customer's security team requires the logging of all network access attempts to Amazon EC2
+instances in their production VPC on AWS.
+Which configuration will meet the security team's requirement?
+客户的安全团队需要将所有网络访问尝试记录到Amazon EC2
+在AWS上的生产VPC中的实例。
+哪种配置将满足安全团队的需求?
+A. Enable CloudTrail for the production VPC.
+B. Enable VPC Flow Logs for the production VPC.
+C. Enable both CloudTrail and VPC Flow Logs for the production VPC.
+D. Enable both CloudTrail and VPC Flow Logs for the AWS account.
+Answer:
+
+★Question 32
+You are running a mobile media application and are considering API Gateway for the client entrypoint.
+What benefits would this provide? (Select TWO.)
+您正在运行一个移动媒体应用程序，并考虑将API网关作为客户端入口点。
+这会带来什么好处呢?(选择两个。)
+A. Caching API responses
+B. IP blacklisting
+C. Intrusion prevention
+D. Load balancing
+E. Throttling traffic
+Answer:
+API Gateway 优点
+
+
+★Question 33
+Your application currently stores data on an unencrypted EBS volume. A new security policy
+mandates that all data must be encrypted at rest. How can you encrypt the data?
+您的应用程序目前将数据存储在一个未加密的EBS卷上。
+新的安全策略要求所有数据必须在静止状态下进行加密。
+如何加密数据?
+A. Create a snapshot of the volume. Create a new, encrypted volume from the snapshot. Replace the
+volume.
+B. Stop the instance. Detach the volume. Modify the EBS settings to encrypt the volume. Reattach the
+volume. Start the instance.
+C. Create a snapshot of the volume. Make an encrypted copy of the snapshot. Create a new volume from
+the new snapshot. Replace the volume.
+D. Modify the EBS settings to encrypt the volume. You do need to detach the volume or stop the
+instance.
+Answer:
+EBS加密卷
+
+★Question 34
+You have a web portal composed of two services. Each service must scale independently. Both
+services should be served under the same domain. Which configuration allows this?
+您有一个由两个服务组成的web门户。
+每个服务必须独立伸缩。
+两个服务应该在同一个域中提供。
+哪种配置允许这样做?
+A. Use two AWS Application Load Balancers: one for each service. Assign the same CNAME to both.
+B. Use one AWS Classic Load Balancer. Create a redirect in the web server based on user's source IPs.
+C. Use two AWS Classic Load Balancers: one for each service. Assign the same CNAME to both.
+D. Use one AWS Application Load Balancer. Specify listener rules to route requests to each service.
+Answer:
+       ALB  1，使用动态端口映射
+            2，能设置监听规则
+ 
+问题 ： ALB Application Load Balancers
+
+★Question 35
+You need a solution to distribute traffic evenly across all of the containers for a task running on
+Amazon ECS. Your task definitions define dynamic host port mapping for your containers. What
+AWS feature provides this functionality?
+您需要一种解决方案，以便在Amazon ECS上运行的任务的所有容器中均匀地分配流量。
+任务定义为容器定义了动态主机端口映射。
+AWS的哪些特性提供了这个功能?
+A. Application Load Balancers support dynamic host port mapping.
+B. CloudFront custom origins support dynamic host port mapping.
+C. All Elastic Load Balancing instances support dynamic host port mapping.
+D. Classic Load Balancers support dynamic host port mapping.
+Answer:
+
+★Question 37
+A customer has written an application that uses Amazon S3 exclusively as a data store. The application works
+well until the customer increases the rate at which the application is updating information. The customer
+now reports that outdated data occasionally appears when the application accesses objects in Amazon S3.
+What could be the problem, given that the application logic is otherwise correct?
+一个客户编写了一个专门使用Amazon S3作为数据存储的应用程序。
+应用程序运行良好，直到客户提高应用程序更新信息的速度。
+客户现在报告说，当应用程序访问Amazon S3中的对象时，偶尔会出现过时的数据。
+如果应用程序逻辑在其他方面是正确的，那么问题是什么呢?
+A. The application is reading parts of objects from Amazon S3 using a range header.
+B. The application is reading objects from Amazon S3 using parallel object requests.
+C. The application is updating records by writing new objects with unique keys.
+D. The application is updating records by overwriting existing objects with the same keys.
+Answer:
