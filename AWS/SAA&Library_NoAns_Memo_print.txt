@@ -274,7 +274,7 @@ B. ELB Classic Load Balancer
 C. Amazon S3
 D. Amazon DynamoDB
 E. Amazon Galcier 速度太慢
-Answer:BC
+Answer:
 
 问题：Amazon CloudFront
 CloudFront 可以无缝使用任何 AWS 源，例如 Amazon S3、Amazon EC2, Elastic Load Balancing 或任何自定义 HTTP 源
@@ -373,7 +373,7 @@ B. Cost Explorer
 C. AWS Trusted Advisor
 D. AWS CloudTrail
 E. Amazon EC2 usage reports
-Answer:AE
+Answer:
 
 ★Question 24
 You have a Cassandra cluster running in private subnets in an Amazon VPC. A new application in a
@@ -398,7 +398,7 @@ B. Adding conditions to managed policies
 C. Using access keys to authenticate IAM users
 D. Using web federated identity to authenticate users
 E. Assigning managed policies to IAM groups
-Answer:AD
+Answer:
 问题：STS定义
 
 ★Question 26  竞价实例 不满一小时不收费，按照定价收费，
@@ -414,7 +414,7 @@ A. $0.47
 B. $0.20
 C. $0.40
 D. $0.22
-Answer:B
+Answer:
 
 ★Question 27
 Your organization is looking for a solution that can help the business with streaming data. Several
@@ -427,7 +427,7 @@ A. Amazon Kinesis Firehose
 B. Amazon Kinesis Streams
 C. Amazon CloudFront
 D. Amazon SQS
-Answer:B
+Answer:
 streaming（流）  →  A、B（Kinesis 流服务）
 
 问题
@@ -744,7 +744,7 @@ B. Store all static files in a multi-AZ Amazon Aurora database.
 C. Create an CloudFront distribution pointing to static content in Amazon S3. 边缘站点
 D. Use Amazon Route 53 to route traffic to the correct region.
 E. Use Amazon S3 multi-part uploads to improve upload times. 知识点 S3支持分段上传
-Answer:AC
+Answer:
 24/7 24小时7天 不能中断
 
 
@@ -1182,7 +1182,7 @@ A. EBS Provisioned IOPS SSD
 B. EBS General Purpose SSD
 C. EBS Cold HDD
 D. EBS Throughput Optimized HDD
-Answer:D
+Answer:
 
 ★Question 71
 A legacy application running in premises requires a Solutions Architect to be able to open a firewall to allow
@@ -2052,7 +2052,7 @@ A. Amazon Aurora
 B. Amazon RDS
 C. Amazon DynamoDB
 D. Amazon ElastiCache
-Answer:A
+Answer:
 三个可用区，每个可用区2个副本
 自动有6个副本
 
@@ -2202,7 +2202,7 @@ A. Amazon S3
 B. Amazon DynamoDB
 C. Amazon RDS
 D. Amazon EBS
-Answer:B
+Answer:
 
 ★Question 130
 A company hosts a website on premises. The website has a mix of static and dynamic content, but
@@ -2348,7 +2348,7 @@ A. Dynamic    动态的
 B. Scheduled  计划的 
 C. Manual     手工
 D. Lifecycle  生命周期
-Answer:A
+Answer:
 
 ★Question 139
 To meet compliance standards, a company must have encrypted archival data storage. Data will be
@@ -2363,7 +2363,7 @@ A. Amazon S3
 B. Amazon EBS
 C. Amazon Glacier
 D. Amazon EFS
-Answer:C
+Answer:
 
 ★Question 140
 An online company wants to conduct real-time sentiment analysis about its products from its social media
@@ -2459,7 +2459,7 @@ A. Amazon DynamoDB
 B. Amazon EBS Throughput Optimized HDD Volumes
 C. Amazon EBS Cold HDD Volumes
 D. Amazon ElastiCache
-Answer:A
+Answer:
 
 ★Question 146
 A Solutions Architect is deploying a new production MySQL database on AWS. It is critical that the database is
@@ -2517,7 +2517,7 @@ A. Migrate the database to MySQL.
 B. Use Amazon RedShift to analyze the queries.
 C. Integrate Amazon ElastiCache into the application.
 D. Use a Lambda-triggered request to the backend database.
-Answer:C
+Answer:
 关键词：相同复杂结果 same complex database queries //用内存数据库缓存结果
 
 ★Question 150
@@ -2534,7 +2534,7 @@ A. Amazon CloudWatch
 B. AWS CloudFormation
 C. AWS Lambda
 D. Amazon SQS
-Answer:C
+Answer:
 
 ★Question 151
 An Internet-facing multi-tier web application must be highly available. An ELB Classic Load
@@ -3318,6 +3318,9 @@ A company wants to migrate a three-tier web application to AWS. The company want
 control the placement of the instances and have visibility into underlying sockets and cores for licensing
 purposes.
 Which compute model should a Solutions Architect choose to accomplish this task?
+一家公司希望将三层web应用程序迁移到AWS。
+该公司想要控制实例的放置，并为了许可的目的对底层套接字和核心具有可见性。
+解决方案架构师应该选择哪个计算模型来完成这个任务?
 A. EC2 Reserved Instances
 B. EC2 Spot Instances
 C. EC2 Dedicated Hosts
@@ -3328,6 +3331,9 @@ Answer:
 An application runs on multiple Amazon EC2 instances. Each running instance of the application
 must have access to a shared file system.
 Where should the data be stored?
+应用程序运行在多个Amazon EC2实例上。
+应用程序的每个运行实例必须能够访问共享的文件系统。
+数据应该存储在哪里?
 A. Amazon S3
 B. Amazon DynamoDB
 C. Amazon EFS
@@ -3338,6 +3344,10 @@ Answer:
 A Solutions Architect is designing a microservice to process records from Amazon Kinesis Streams. The
 metadata must be stored in Amazon DynamoDB. The microservice must be capable of concurrently processing
 10,000 records daily as they arrive in the Kinesis stream. The MOST scalable way to design the microservice is:
+一位解决方案架构师正在设计一个微服务来处理来自Amazon Kinesis流的记录。
+元数据必须存储在Amazon DynamoDB中。
+当微服务到达kineesis流时，每天必须能够同时处理10,000条记录。
+设计微服务的最具可扩展性的方法是:
 A. As an AWS Lambda function.
 B. As a process on an Amazon EC2 instance.
 C. As a Docker container running on Amazon ECS.
