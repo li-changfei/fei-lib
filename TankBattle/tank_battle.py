@@ -131,6 +131,7 @@ def run_game():
                 tank.x = 120
                 tank.y = 280
                 stats.game_step = GameStep.init
+                ai_settings.enemies_allowed = ai_settings.enemies_all * stats.level
                 gf.init_tank(tank, 0, screen)
                 if tank2 is not None:
                     gf.init_tank(tank2, 1, screen)
